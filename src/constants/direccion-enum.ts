@@ -1,0 +1,5 @@
+export enum TIPODIRECCION {
+    PRINCIPAL='PRINCIPAL',
+    SECUNDARIA='SECUNDARIA',
+   
+}
