@@ -11,6 +11,11 @@ import { PrinterModule } from './printer/printer.module';
 import { CuentaBancariaModule } from './cuenta-bancaria/cuenta-bancaria.module';
 import { BancoModule } from './banco/banco.module';
 
+import configurationMaria from './configuration/configuration-maria';
+import { DataSource } from 'typeorm';
+import { DataSourceConfig } from './configuration/data-source';
+import { ConfigModule } from '@nestjs/config';
+
 
 
 
@@ -19,8 +24,14 @@ import { BancoModule } from './banco/banco.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath:`.${process.env.NODE_ENV}.env`,
+      isGlobal:true
+    }),
+
     TypeOrmModule.forRoot({
-      "type": "mysql",
+      ...DataSourceConfig
+     /* "type": "mysql",
       "host": "localhost",
       "port": 3306,
       "username": "root",
@@ -28,11 +39,11 @@ import { BancoModule } from './banco/banco.module';
       "database": "servicioseyg",
       "synchronize": true,
       "logging": false,
-      "autoLoadEntities": true,
+      "autoLoadEntities": true,*/
 
-    }),
+   }),
     ClienteModule,
-    DireccionModule,
+    DireccionModule, 
     MunicipioModule,
     DepartamentoModule,
     RecoleccionEntregaModule,
@@ -47,6 +58,8 @@ import { BancoModule } from './banco/banco.module';
 
   ],
   controllers: [],
-  providers: [],
+  providers: [
+
+  ],
 })
 export class AppModule { }
