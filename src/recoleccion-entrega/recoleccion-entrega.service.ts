@@ -1,15 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateRecoleccionEntregaDto } from './dto/create-recoleccion-entrega.dto';
 import { UpdateRecoleccionEntregaDto } from './dto/update-recoleccion-entrega.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RecoleccionEntrega } from './entities/recoleccion-entrega.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RecoleccionEntregaService {
-  create(createRecoleccionEntregaDto: CreateRecoleccionEntregaDto) {
-    return 'This action adds a new recoleccionEntrega';
+
+/**
+ *
+ */
+constructor(
+  @InjectRepository(RecoleccionEntrega)
+  private readonly repository:Repository<RecoleccionEntrega>
+) {
+  
+  
+}
+
+  async create(createRecoleccionEntregaDto: CreateRecoleccionEntregaDto) {
+    try{
+      return await this.repository.save(createRecoleccionEntregaDto)
+    }catch({ name, message } ){
+      throw new ConflictException('Error creando recoleccion ',message)
+    }
+   
   }
 
-  findAll() {
-    return `This action returns all recoleccionEntrega`;
+ async findAll() {
+    return await this.repository.find()
   }
 
   findOne(id: number) {

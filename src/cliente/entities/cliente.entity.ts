@@ -20,6 +20,10 @@ export class Cliente {
     @Column({type: String, nullable:false,length:30 })
     telefono:string;
 
+    @Column({type: Boolean,nullable:false,default:false})
+    deleted?:boolean
+
+
 //cuentaBancaria
     
 
@@ -27,16 +31,16 @@ export class Cliente {
     nombrePagina?:string;
 
     @Column({type: Boolean, default:true })
-    estado?:Boolean;
+    estado?:boolean;
     
-    @OneToMany(() => Direccion,(direccion)=>direccion.cliente,{cascade:['insert'],eager:true})
+    @OneToMany(() => Direccion,(direccion)=>direccion.cliente,{cascade:['insert','update'],eager:true})
     direcciones: Direccion[]
 
     @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.clienteEnvia)
     envios:RecoleccionEntrega[]
 
 
-    @OneToMany(()=>CuentaBancaria,(cuenta)=>cuenta.cliente,{cascade:['insert'],eager:true})
+    @OneToMany(()=>CuentaBancaria,(cuenta)=>cuenta.cliente,{cascade:['insert','update'],eager:true})
     cuentas:CuentaBancaria[]
 
     @OneToOne(() => Perfil)

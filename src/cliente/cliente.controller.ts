@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { ClienteService } from './cliente.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
@@ -15,26 +15,32 @@ export class ClienteController {
     console.log('clientedto',createClienteDto)
 
     
-    return this.clienteService.create(createClienteDto);
+    return this.clienteService.createCliente(createClienteDto);
   }
 
   @Get()
   findAll() {
     return this.clienteService.findAll();
   }
+  @Get('/getallactive')
+  findSend() {
+    return this.clienteService.findSend();
+  }
+
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.clienteService.findOne(id);
+    return this.clienteService.findCliente(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
-    return this.clienteService.update(+id, updateClienteDto);
+  @Put()
+  update(@Body() updateClienteDto: UpdateClienteDto) {
+    console.log('controller id',updateClienteDto.id)
+    return this.clienteService.updateCliente(updateClienteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clienteService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.clienteService.removeCliente(id);
   }
 }

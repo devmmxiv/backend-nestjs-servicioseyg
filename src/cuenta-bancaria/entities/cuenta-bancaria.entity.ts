@@ -3,7 +3,7 @@ import { Cliente } from "src/cliente/entities/cliente.entity";
 import { TIPOCUENTABANCARIA } from "src/constants/tipo-cuentas";
 import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
-@Index(['banco', 'tipoCuenta'], { unique: true }) // Here
+@Index(['banco', 'tipoCuenta','cliente'], { unique: true }) // Here
 export class CuentaBancaria {
 
     
@@ -16,7 +16,7 @@ export class CuentaBancaria {
     @Column({type:'enum',enum:TIPOCUENTABANCARIA,default:TIPOCUENTABANCARIA.MONETARIA})
     tipoCuenta:TIPOCUENTABANCARIA
 
-    @ManyToOne(()=>Banco,(banco)=>banco.cuentas)
+    @ManyToOne(()=>Banco,(banco)=>banco.cuentas,{eager:true})
     banco:Banco
 
     

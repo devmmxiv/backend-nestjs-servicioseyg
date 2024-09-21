@@ -5,7 +5,7 @@ import { CreateDireccionDto } from "src/direccion/dto/create-direccion.dto";
 
 
 export class CreateClienteDto {
-    id:number;
+    id?:number;
     @IsString()
     codigoCliente:string;
     @IsString()
@@ -18,7 +18,7 @@ export class CreateClienteDto {
     @IsOptional()
     nombrePagina:string;
     @IsBoolean()
-    estado?:Boolean;
+    estado?:boolean;
 
     @IsArray()
     @Type(()=>CreateDireccionDto)

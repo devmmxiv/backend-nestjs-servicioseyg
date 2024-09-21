@@ -24,7 +24,7 @@ export class Direccion {
     cliente: Cliente
 
 
-    @ManyToOne(()=>Municipio,(municipio)=>municipio.direcciones)
+    @ManyToOne(()=>Municipio,(municipio)=>municipio.direcciones,{eager:true})
     municipio:Municipio
 
     @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.direccionClienteEnvia)

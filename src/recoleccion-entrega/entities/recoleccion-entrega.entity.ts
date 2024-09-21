@@ -1,5 +1,6 @@
 import { IsNotEmpty, isNotEmpty, IsString, isString } from "class-validator";
 import { Cliente } from "src/cliente/entities/cliente.entity";
+import { ESTATUSRECOLECCION } from "src/constants/status_recoleccion";
 import { Direccion } from "src/direccion/entities/direccion.entity";
 import { Municipio } from "src/municipio/entities/municipio.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -27,14 +28,18 @@ export class RecoleccionEntrega {
     @Column({ type: String, nullable: false, length: 50 })
     telefonoRecibe: string;
 
-    @Column({ type: Number, nullable: false, default:0.00 })
+    @Column({ type: 'decimal', nullable: false, default:0.00 })
     montoCobrar: number;
 
+    @Column({ type: 'decimal', nullable: false, default:0.00 })
+    costoEnvio: number;
+    @Column({ type: 'decimal', nullable: false, default:0.00 })
+    total: number;
     @Column({ type: String, nullable: false, length: 200 })
     direccionEntrega: string;
 
-    @Column({ type: Boolean, nullable: false, default: true })
-    estado: Boolean;
+    @Column({type:'enum',enum:ESTATUSRECOLECCION,default:ESTATUSRECOLECCION.CREADA})
+    estado: ESTATUSRECOLECCION;
 
     @Column({ type: Number, nullable: true })
     latitud?: number;
