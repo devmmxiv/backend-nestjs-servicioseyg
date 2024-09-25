@@ -9,12 +9,13 @@ export class RecoleccionEntregaController {
 
   @Post()
   create(@Body() createRecoleccionEntregaDto: CreateRecoleccionEntregaDto) {
+
     return this.recoleccionEntregaService.create(createRecoleccionEntregaDto);
   }
 
   @Get()
   findAll() {
-    return this.recoleccionEntregaService.findAll();
+    return this.recoleccionEntregaService.findRecolecciones();
   }
 
   @Get(':id')
@@ -23,9 +24,11 @@ export class RecoleccionEntregaController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
-    return this.recoleccionEntregaService.update(+id, updateRecoleccionEntregaDto);
+  update(@Param('id') id: number, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
+
+    return this.recoleccionEntregaService.update(id, updateRecoleccionEntregaDto);
   }
+  
 
   @Delete(':id')
   remove(@Param('id') id: string) {

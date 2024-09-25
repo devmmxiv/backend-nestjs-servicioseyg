@@ -3,7 +3,8 @@ import { CreateRecoleccionEntregaDto } from './dto/create-recoleccion-entrega.dt
 import { UpdateRecoleccionEntregaDto } from './dto/update-recoleccion-entrega.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecoleccionEntrega } from './entities/recoleccion-entrega.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+import { ESTATUSRECOLECCION } from 'src/constants/status_recoleccion';
 
 @Injectable()
 export class RecoleccionEntregaService {
@@ -36,11 +37,34 @@ constructor(
     return `This action returns a #${id} recoleccionEntrega`;
   }
 
-  update(id: number, updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
-    return `This action updates a #${id} recoleccionEntrega`;
+  async update(id: number, recoleccion: UpdateRecoleccionEntregaDto) {
+
+    console.log('update recoleccion servicio',recoleccion.estado)
+
+    try{
+      const rows:UpdateResult=await this.repository.update(id,{estado:recoleccion.estado});
+      return rows.affected==1;
+    }catch({ name, message } ){
+      throw new ConflictException('Error actualizando recoleccion ',message)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} recoleccionEntrega`;
+
+
+  async remove(id: number) {
+    return await this.repository.delete(id) 
   }
+  async findRecolecciones() {
+    const estado='ENTREGADA'
+    return await this.repository.createQueryBuilder("recoleccionEntrega")
+     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+     .where('recoleccionEntrega.estado != :estado',{estado})
+     .getMany()
+ 
+ 
+   }
 }
