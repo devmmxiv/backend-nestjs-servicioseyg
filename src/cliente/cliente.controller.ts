@@ -12,9 +12,7 @@ export class ClienteController {
 
   @Post()
   create(@Body() createClienteDto: CreateClienteDto) {
-    console.log('clientedto',createClienteDto)
-
-    
+       
     return this.clienteService.createCliente(createClienteDto);
   }
 
@@ -42,5 +40,9 @@ export class ClienteController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.clienteService.removeCliente(id);
+  }
+  @Get('/recolecciones/cierre/:idCierre')
+  test(@Param('idCierre') idCierre: number) {
+    return this.clienteService.ClientesRecoleccionesCerradas(idCierre)
   }
 }

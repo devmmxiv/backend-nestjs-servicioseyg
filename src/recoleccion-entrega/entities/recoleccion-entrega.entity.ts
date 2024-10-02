@@ -1,6 +1,8 @@
 import { IsNotEmpty, isNotEmpty, IsString, isString } from "class-validator";
+import { Cierre } from "src/cierre/entities/cierre.entity";
 import { Cliente } from "src/cliente/entities/cliente.entity";
 import { ESTATUSRECOLECCION } from "src/constants/status_recoleccion";
+import { TIPOPAGO } from "src/constants/tipo_pago";
 import { Direccion } from "src/direccion/entities/direccion.entity";
 import { Municipio } from "src/municipio/entities/municipio.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -41,12 +43,17 @@ export class RecoleccionEntrega {
     @Column({type:'enum',enum:ESTATUSRECOLECCION,default:ESTATUSRECOLECCION.CREADA})
     estado: ESTATUSRECOLECCION;
 
+    @Column({type:'enum',enum:TIPOPAGO,default:TIPOPAGO.EFECTIVO})
+    tipoPago: TIPOPAGO;
+
     @Column({ type: Number, nullable: true })
     latitud?: number;
 
     @Column({ type: Number, nullable: true })
     altitud?: number;
 
+    @Column({ type: Boolean, default:false })
+    cerrada: boolean;
     @ManyToOne(() => Cliente,(cliente)=>cliente.envios)
     @JoinColumn({
         name: 'idClienteEnvia',
@@ -65,5 +72,11 @@ export class RecoleccionEntrega {
         name: 'idMunicipioRecibe',
       })
     municipioRecibe:Municipio;
+
+    @ManyToOne(() =>Cierre,(cierre)=>cierre.recolecciones)
+    @JoinColumn({
+      name: 'idCierre',
+    })
+    cierre: Cierre
 
 }

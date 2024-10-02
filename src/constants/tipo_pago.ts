@@ -1,0 +1,8 @@
+export enum TIPOPAGO {
+    EFECTIVO = 'EFECTIVO',
+    TRANSFERENCIA = 'TRANSFERENCIA',
+    TARJETA = 'TARJETA',
+    YAPAGADO = 'YA PAGADO',
+
+
+}

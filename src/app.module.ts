@@ -15,6 +15,7 @@ import configurationMaria from './configuration/configuration-maria';
 import { DataSource } from 'typeorm';
 import { DataSourceConfig } from './configuration/data-source';
 import { ConfigModule } from '@nestjs/config';
+import { CierreModule } from './cierre/cierre.module';
 
 
 
@@ -54,7 +55,8 @@ import { ConfigModule } from '@nestjs/config';
 
     PrinterModule,
     CuentaBancariaModule,
-    BancoModule
+    BancoModule,
+    CierreModule
 
   ],
   controllers: [],

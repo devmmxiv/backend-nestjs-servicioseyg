@@ -7,6 +7,10 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Cliente } from './entities/cliente.entity';
 import { BaseService } from 'src/constants/BaseService';
 import { Direccion } from 'src/direccion/entities/direccion.entity';
+import { RecoleccionEntrega } from 'src/recoleccion-entrega/entities/recoleccion-entrega.entity';
+import { Cierre } from 'src/cierre/entities/cierre.entity';
+import { IsLatitude } from 'class-validator';
+import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.entity';
 
 @Injectable()
 export class ClienteService {
@@ -92,5 +96,30 @@ export class ClienteService {
     return rows.affected==1;
 
     
+  }
+  async ClientesRecoleccionesCerradas(idCierre:number){
+
+    const users= await this.clienteRepository.find({
+      select:{
+          
+      },
+      relations: {
+        envios: {
+          cierre:true
+       
+        },
+    },
+    where: {
+        envios: {
+            cierre:{
+              id:idCierre
+            }
+            
+        },
+    },   
+    
+
+  })
+  return users;
   }
 }

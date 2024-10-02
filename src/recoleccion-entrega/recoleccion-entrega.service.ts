@@ -3,15 +3,12 @@ import { CreateRecoleccionEntregaDto } from './dto/create-recoleccion-entrega.dt
 import { UpdateRecoleccionEntregaDto } from './dto/update-recoleccion-entrega.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecoleccionEntrega } from './entities/recoleccion-entrega.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { In, Repository, UpdateResult } from 'typeorm';
 import { ESTATUSRECOLECCION } from 'src/constants/status_recoleccion';
+import { Cliente } from 'src/cliente/entities/cliente.entity';
 
 @Injectable()
 export class RecoleccionEntregaService {
-
-/**
- *
- */
 constructor(
   @InjectRepository(RecoleccionEntrega)
   private readonly repository:Repository<RecoleccionEntrega>
@@ -34,26 +31,52 @@ constructor(
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} recoleccionEntrega`;
+    return `This action returns a #${id} recoleccionEntrega10`;
   }
 
-  async update(id: number, recoleccion: UpdateRecoleccionEntregaDto) {
+  async updateEstado(id: number, recoleccion: UpdateRecoleccionEntregaDto) {
 
-    console.log('update recoleccion servicio',recoleccion.estado)
-
-    try{
+   try{
       const rows:UpdateResult=await this.repository.update(id,{estado:recoleccion.estado});
       return rows.affected==1;
     }catch({ name, message } ){
       throw new ConflictException('Error actualizando recoleccion ',message)
     }
   }
+  async updateRecoleccion(id: number, recoleccion: UpdateRecoleccionEntregaDto) {
+
+    try{
+       const rows:UpdateResult=await this.repository.update(id,recoleccion);
+       return rows.affected==1;
+     }catch({ name, message } ){
+       throw new ConflictException('Error actualizando recoleccion ',message)
+     }
+   }
+  async asignarCierre(id:number) {
+
+    try{
+   
+  
+     return await  this.repository
+      .createQueryBuilder()
+      .update()
+      .set({ cierre: {id:id}, cerrada:true })
+      .where("estado in(:estados)",{estados:['ENTREGADA','NO RECIBIDA']})
+      .execute()
+       
+     }catch({ name, message } ){
+    
+       throw new ConflictException('Error asignado idCierre ',message)
+     }
+   }
+ 
 
 
 
   async remove(id: number) {
     return await this.repository.delete(id) 
   }
+
   async findRecolecciones() {
     const estado='ENTREGADA'
     return await this.repository.createQueryBuilder("recoleccionEntrega")
@@ -63,8 +86,97 @@ constructor(
      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
      .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
      .where('recoleccionEntrega.estado != :estado',{estado})
+     .andWhere('recoleccionEntrega.cerrada=false')
      .getMany()
  
  
    }
+
+   async findDatosCierre() {
+    try{
+      //createQueryBuilder("user").groupBy("user.name").addGroupBy("user.id")
+      return await this.repository.createQueryBuilder("recoleccionEntrega")
+      .select(["recoleccionEntrega.estado estado"])
+      .addSelect("COUNT(recoleccionEntrega.estado)", "cantidad")
+
+     .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO RECIBIDA']})
+     .andWhere('recoleccionEntrega.cerrada=false')
+      .groupBy("recoleccionEntrega.estado")
+      //.addGroupBy('DATE(recoleccionEntrega.fechaCreacion)')
+      .getRawMany()
+                                          
+    }catch({ name, message } ){
+      throw new ConflictException('Error consultando recoleccion ',message)
+    }
+   }
+   async ListadoRecolecionesCierre() {
+    try{
+
+
+      return await this.repository.createQueryBuilder("recoleccionEntrega")
+       .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+       .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+      // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+       .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+       .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+       .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO RECIBIDA']})
+       .andWhere('recoleccionEntrega.cerrada=false')
+       .getMany()
+   
+                                          
+    }catch({ name, message } ){
+      throw new ConflictException('Error consultando recolecciones ',message)
+    }
+   }
+    async findRecoleccionesEstado() {
+      try{
+        //createQueryBuilder("user").groupBy("user.name").addGroupBy("user.id")
+        return await this.repository.createQueryBuilder("recoleccionEntrega")
+        .select(["recoleccionEntrega.estado estado"])
+        .addSelect("COUNT(recoleccionEntrega.estado)", "cantidad")
+  
+        .where('recoleccionEntrega.cerrada=false')
+        //.addSelect("SUM(user.photosCount)", "sum")
+        .groupBy("recoleccionEntrega.estado")
+         .getRawMany()
+
+                                           
+      }catch({ name, message } ){
+        throw new ConflictException('Error consultando recoleccion ',message)
+      }
+   // 
+   /* */
+ 
+ 
+   }
+   //para reportes
+   async findClientesRecolecciones(idCierre:number){
+    
+    const clientes:Cliente[]=await this.repository.createQueryBuilder("recoleccionEntrega")
+    .leftJoin("recoleccionEntrega.clienteEnvia", "cliente")
+    .select("cliente.id,cliente.codigoCliente,cliente.nombre,cliente.apellido,cliente.nombrePagina,cliente.telefono")
+    .where('recoleccionEntrega.idCierre=:idCierre',{idCierre:idCierre})
+    .groupBy("cliente.id,cliente.codigoCliente,cliente.nombre,cliente.apellido,cliente.nombrePagina,cliente.telefono")
+    .getRawMany();
+    
+    let recolecciones:RecoleccionEntrega[]
+    clientes.forEach(async c => {
+      const a:RecoleccionEntrega[] =await   this.repository.createQueryBuilder("recoleccionEntrega")
+      .where('recoleccionEntrega.idCierre=:idCierre',{idCierre:idCierre})
+
+      .andWhere('recoleccionEntrega.idClienteEnvia=:idCliente',{idCliente:c.id})
+      .getMany();
+      c.envios=a
+    });
+
+
+   return clientes
+
+
+
+   
+
+    
+   }
 }
+ 

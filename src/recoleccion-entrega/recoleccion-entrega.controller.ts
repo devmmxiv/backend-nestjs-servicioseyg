@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { RecoleccionEntregaService } from './recoleccion-entrega.service';
 import { CreateRecoleccionEntregaDto } from './dto/create-recoleccion-entrega.dto';
 import { UpdateRecoleccionEntregaDto } from './dto/update-recoleccion-entrega.dto';
@@ -17,21 +17,49 @@ export class RecoleccionEntregaController {
   findAll() {
     return this.recoleccionEntregaService.findRecolecciones();
   }
-
-  @Get(':id')
+  @Get('/recoleccion/:id')
   findOne(@Param('id') id: string) {
     return this.recoleccionEntregaService.findOne(+id);
   }
+  @Get('/datoscierre')
+  findDatosCierre() {
 
-  @Patch(':id')
+    return this.recoleccionEntregaService.findDatosCierre();
+
+  }
+  @Get('/recoleccionesestado')
+  findRecoleccionesEstado() {
+
+    return this.recoleccionEntregaService.findRecoleccionesEstado();
+
+  }
+  @Get('/listadorecoleccionescierre')
+  listadoRecolecciones() {
+
+    return this.recoleccionEntregaService.ListadoRecolecionesCierre();
+
+  }
+
+
+  @Put('/update/:id')
+  updateRecoleccion(@Param('id') id: number, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
+    console.log('update',updateRecoleccionEntregaDto)
+    return this.recoleccionEntregaService.updateRecoleccion(id, updateRecoleccionEntregaDto);
+  }
+
+
+  @Patch('/update/estado/:id')
   update(@Param('id') id: number, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
 
-    return this.recoleccionEntregaService.update(id, updateRecoleccionEntregaDto);
+    return this.recoleccionEntregaService.updateEstado(id, updateRecoleccionEntregaDto);
   }
-  
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.recoleccionEntregaService.remove(+id);
+  }
+  @Get('test')
+  test(){
+    return this.recoleccionEntregaService.findClientesRecolecciones(5)
   }
 }

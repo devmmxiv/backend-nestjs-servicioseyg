@@ -36,7 +36,7 @@ export class Cliente {
     @OneToMany(() => Direccion,(direccion)=>direccion.cliente,{cascade:['insert','update'],eager:true})
     direcciones: Direccion[]
 
-    @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.clienteEnvia)
+    @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.clienteEnvia,{eager:true})
     envios:RecoleccionEntrega[]
 
 

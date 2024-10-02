@@ -1,5 +1,6 @@
 import { Cliente } from "src/cliente/entities/cliente.entity";
 import { ESTATUSRECOLECCION } from "src/constants/status_recoleccion";
+import { TIPOPAGO } from "src/constants/tipo_pago";
 import { Direccion } from "src/direccion/entities/direccion.entity";
 import { Municipio } from "src/municipio/entities/municipio.entity";
 
@@ -16,5 +17,6 @@ export class CreateRecoleccionEntregaDto {
     clienteEnvia: Cliente;
     direccionClienteEnvia:Direccion;
     municipioRecibe:Municipio;
+    tipoPago:TIPOPAGO
 
 }
