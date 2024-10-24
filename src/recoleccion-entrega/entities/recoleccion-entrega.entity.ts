@@ -4,6 +4,7 @@ import { Cliente } from "src/cliente/entities/cliente.entity";
 import { ESTATUSRECOLECCION } from "src/constants/status_recoleccion";
 import { TIPOPAGO } from "src/constants/tipo_pago";
 import { Direccion } from "src/direccion/entities/direccion.entity";
+import { Empleado } from "src/empleado/entities/empleado.entity";
 import { Municipio } from "src/municipio/entities/municipio.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -20,6 +21,12 @@ export class RecoleccionEntrega {
     fechaActualizacion: Date;
 
   
+    @CreateDateColumn()
+    fechaRecoleccion: Date;
+
+    
+    @CreateDateColumn()
+    fechaEntrega: Date;
     
     @Column({ type: String, nullable: false, length: 50 })
     nombreRecibe: string;
@@ -30,13 +37,13 @@ export class RecoleccionEntrega {
     @Column({ type: String, nullable: false, length: 50 })
     telefonoRecibe: string;
 
-    @Column({ type: 'decimal', nullable: false, default:0.00 })
-    montoCobrar: number;
+    @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
+    precioProducto: number;
 
-    @Column({ type: 'decimal', nullable: false, default:0.00 })
+    @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
     costoEnvio: number;
-    @Column({ type: 'decimal', nullable: false, default:0.00 })
-    total: number;
+    @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00, comment:"Este es el monto que se cobra al cliente que recibe"})
+    totalCobrar: number;
     @Column({ type: String, nullable: false, length: 200 })
     direccionEntrega: string;
 
@@ -54,6 +61,9 @@ export class RecoleccionEntrega {
 
     @Column({ type: Boolean, default:false })
     cerrada: boolean;
+
+    @Column({ type: Boolean, default:false,comment:"true clienteRecibe   paga montocobrar+envio" })
+    clienteRecibePagaEnvio: boolean;
     @ManyToOne(() => Cliente,(cliente)=>cliente.envios)
     @JoinColumn({
         name: 'idClienteEnvia',
@@ -78,5 +88,17 @@ export class RecoleccionEntrega {
       name: 'idCierre',
     })
     cierre: Cierre
+
+    @ManyToOne(() => Empleado,(empleado)=>empleado.enviosEntrega)
+    @JoinColumn({
+        name: 'idEmpleadoEntrega',
+      })
+    empleadoEntrega: Empleado;
+
+    @ManyToOne(() => Empleado,(empleado)=>empleado.enviosRecolecta)
+    @JoinColumn({
+        name: 'idEmpleadoRecolecta',
+      })
+    empleadoRecolecta: Empleado;
 
 }

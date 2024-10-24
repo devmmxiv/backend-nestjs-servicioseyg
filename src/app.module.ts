@@ -5,7 +5,7 @@ import { DireccionModule } from './direccion/direccion.module';
 import { MunicipioModule } from './municipio/municipio.module';
 import { DepartamentoModule } from './departamento/departamento.module';
 import { RecoleccionEntregaModule } from './recoleccion-entrega/recoleccion-entrega.module';
-import { PerfilModule } from './perfil/perfil.module';
+import { UsuarioModule } from './usuario/usuario.module';
 import { ReportsModule } from './reports/reports.module';
 import { PrinterModule } from './printer/printer.module';
 import { CuentaBancariaModule } from './cuenta-bancaria/cuenta-bancaria.module';
@@ -16,6 +16,8 @@ import { DataSource } from 'typeorm';
 import { DataSourceConfig } from './configuration/data-source';
 import { ConfigModule } from '@nestjs/config';
 import { CierreModule } from './cierre/cierre.module';
+import { EmpleadoModule } from './empleado/empleado.module';
+
 
 
 
@@ -49,14 +51,16 @@ import { CierreModule } from './cierre/cierre.module';
     DepartamentoModule,
     RecoleccionEntregaModule,
 
-    PerfilModule,
+    UsuarioModule,
 
     ReportsModule,
 
     PrinterModule,
     CuentaBancariaModule,
     BancoModule,
-    CierreModule
+    CierreModule,
+    EmpleadoModule,
+
 
   ],
   controllers: [],

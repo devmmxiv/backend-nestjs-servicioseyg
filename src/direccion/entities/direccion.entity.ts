@@ -1,6 +1,7 @@
 
 import { Cliente } from "src/cliente/entities/cliente.entity";
 import { TIPODIRECCION } from "src/constants/direccion-enum";
+import { Empleado } from "src/empleado/entities/empleado.entity";
 import { Municipio } from "src/municipio/entities/municipio.entity";
 import { RecoleccionEntrega } from "src/recoleccion-entrega/entities/recoleccion-entrega.entity";
 import { Column, Entity, Index,  ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -22,6 +23,9 @@ export class Direccion {
 
     @ManyToOne(() => Cliente,(cliente)=>cliente.direcciones)
     cliente: Cliente
+
+    @ManyToOne(() => Empleado,(empleado)=>empleado.direcciones)
+    empleado: Empleado
 
 
     @ManyToOne(()=>Municipio,(municipio)=>municipio.direcciones,{eager:true})

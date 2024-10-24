@@ -1,8 +1,9 @@
 import { IsOptional, IsString } from "class-validator";
 
-export class CreatePerfilDto {
+
+export class CreateUsuarioDto {
     @IsString()
-    usuario:string;
+    username:string;
     @IsString()
     password:string;
     @IsString()

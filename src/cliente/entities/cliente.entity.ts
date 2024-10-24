@@ -1,7 +1,7 @@
 
 import { CuentaBancaria } from "src/cuenta-bancaria/entities/cuenta-bancaria.entity";
 import { Direccion } from "src/direccion/entities/direccion.entity";
-import { Perfil } from "src/perfil/entities/perfil.entity";
+import { Usuario } from "src/usuario/entities/usuario.entity";
 import { RecoleccionEntrega } from "src/recoleccion-entrega/entities/recoleccion-entrega.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -43,7 +43,7 @@ export class Cliente {
     @OneToMany(()=>CuentaBancaria,(cuenta)=>cuenta.cliente,{cascade:['insert','update'],eager:true})
     cuentas:CuentaBancaria[]
 
-    @OneToOne(() => Perfil)
+    @OneToOne(() => Usuario)
     @JoinColumn()
-    perfil: Perfil
+    usuario: Usuario
 }

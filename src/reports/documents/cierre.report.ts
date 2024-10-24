@@ -176,9 +176,9 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                 { text: e.estado, style: 'c' },
                                 { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
                                 { text: e.nombreRecibe + ' ' + e.apellidoRecibe, style: 'c' },
-                                { text: u.currencyFormatter(e.montoCobrar), style: 'c'},
+                                { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
                                 { text: u.currencyFormatter(e.costoEnvio),style: 'c'},
-                                { text: u.currencyFormatter(e.montoCobrar-e.costoEnvio), style: 'ctotal'}
+                                { text: u.currencyFormatter(e.totalCobrar-e.costoEnvio), style: 'ctotal'}
                                     
                             ]
                         )
@@ -194,7 +194,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                 fontSize:14,
                                 margin:[5,5]
 
-                            },{},{text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.montoCobrar-e.costoEnvio),0)),
+                            },{},{text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.totalCobrar-e.costoEnvio),0)),
                                 bold:true,
                                 aligment:'right',
                                  fillColor:'black',
