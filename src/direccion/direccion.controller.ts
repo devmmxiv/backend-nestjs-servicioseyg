@@ -2,14 +2,22 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { DireccionService } from './direccion.service';
 import { CreateDireccionDto } from './dto/create-direccion.dto';
 import { UpdateDireccionDto } from './dto/update-direccion.dto';
+import { DireccionEmpleadoService } from './direccion-empleado.service';
+import { CreateDireccionEmpleadoDto } from './dto/create-direccion-empleado';
 
 @Controller('direccion')
 export class DireccionController {
-  constructor(private readonly direccionService: DireccionService) {}
+  constructor(private readonly direccionService: DireccionService,
+    private readonly direccionEmpleadoService: DireccionEmpleadoService
+  ) {}
 
   @Post()
   create(@Body() createDireccionDto: CreateDireccionDto) {
     return this.direccionService.create(createDireccionDto);
+  }
+  @Post('/empleado')
+  createDireccionEmpleado(@Body() createDireccionDto: CreateDireccionEmpleadoDto) {
+    return this.direccionEmpleadoService.createDireccionEmpleado(createDireccionDto);
   }
 
   @Get()

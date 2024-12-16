@@ -32,7 +32,7 @@ export class CierreService {
     }
   
   }
-  async cierreCompleto(idCierre:number){
+  async cierreCompleto(idCierre:number,idCliente:number){
     let cierre=new CierreDetalle()
    
     try {
@@ -43,7 +43,7 @@ export class CierreService {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
       
-      const clientes=await this.serviceCliente.ClientesRecoleccionesCerradas(idCierre)
+      const clientes=await this.serviceCliente.ClientesRecoleccionesCerradas(idCierre,idCliente)
       cierre.id=c.id
       cierre.fechaCierre=c.fechaCierre
       cierre.clientesRecoleciones=clientes;
@@ -71,7 +71,7 @@ export class CierreService {
  
   }
 
-  findOne(id: number) {
+  findOne(id: number, idCliente:number) {
     return `This action returns a #${id} cierre`;
   }
 

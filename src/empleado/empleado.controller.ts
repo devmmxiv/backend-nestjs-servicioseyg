@@ -31,4 +31,9 @@ export class EmpleadoController {
   remove(@Param('id') id: string) {
     return this.empleadoService.remove(+id);
   }
+
+  @Get('/empleadobyusername/:username')
+  empleadobyUsername(@Param('username') username: string) {
+    return this.empleadoService.empleadoByUsername(username)
+  }
 }

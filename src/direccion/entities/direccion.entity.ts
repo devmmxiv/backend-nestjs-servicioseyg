@@ -24,14 +24,10 @@ export class Direccion {
     @ManyToOne(() => Cliente,(cliente)=>cliente.direcciones)
     cliente: Cliente
 
-    @ManyToOne(() => Empleado,(empleado)=>empleado.direcciones)
-    empleado: Empleado
-
-
     @ManyToOne(()=>Municipio,(municipio)=>municipio.direcciones,{eager:true})
     municipio:Municipio
 
-    @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.direccionClienteEnvia)
+    @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.direccionEnvia)
     entregas:RecoleccionEntrega[];
     
 

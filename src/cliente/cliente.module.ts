@@ -21,6 +21,7 @@ import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.ent
   controllers: [ClienteController],
   providers: [ClienteService,CuentaBancariaService,
  DireccionService ],
+ exports:[ClienteService]
 
 
 })

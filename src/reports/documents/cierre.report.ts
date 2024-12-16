@@ -67,8 +67,10 @@ const logo: Content = {
 }
 export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
     const date = new Date();
+   
 
     return {
+    
         header: {
             text: [{text:`Reporte Cierre diario\n Fecha Creacion ${u.dateFormatter(date)}`}],
             alignment: 'right',
@@ -158,58 +160,64 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                             {text:"\n"}
                             ],
                     ],
-                    [{
-                        
-
-                        layout: 'lightHorizontalLines',
-                        headerRows: 1,
-
-                        table:
+                    [
                         {
-                            widths:[75,'auto','*','auto','auto','auto'],
-                            body: [['Estado','Fecha', 'Persona Recibio', 'Monto Cobrado', 'Costo Envio', {text:"Depositar",style:'right'}],
                         
-                            ...x.envios.map((e) => 
-                            
-                            
-                                [
-                                { text: e.estado, style: 'c' },
-                                { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
-                                { text: e.nombreRecibe + ' ' + e.apellidoRecibe, style: 'c' },
-                                { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
-                                { text: u.currencyFormatter(e.costoEnvio),style: 'c'},
-                                { text: u.currencyFormatter(e.totalCobrar-e.costoEnvio), style: 'ctotal'}
-                                    
-                            ]
-                        )
-                    
-                        , [{},{}, {}, {}, {}, {}],
-                            [{},{},{},   {
-                                bold:true,
-                                text:"Total a Depositar",
-                                colSpan:2,
-                                aligment:'right',
-                                fillColor:'black',
-                                color:'white',
-                                fontSize:14,
-                                margin:[5,5]
 
-                            },{},{text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.totalCobrar-e.costoEnvio),0)),
-                                bold:true,
-                                aligment:'right',
-                                 fillColor:'black',
-                                color:'white',
-                                fontSize:14,
-                                margin:[5,5]
-                            }
-                              //   {text:x.envios.map((c)=> {return c.total+3})}
+                            layout: 'lightHorizontalLines',
+                            headerRows: 1,
+
+                            table:
+                            {
+                                widths:[75,'auto','*','auto','auto','auto'],
+                                body: [['Estado','Fecha', 'Persona Recibio', 'Monto Cobrado','Precio Envio', {text:"Depositar",style:'right'}],
+                            
+                                ...x.envios.map( (e) => 
+                                
+                                
+                                    [
+                                    { text: e.estado, style: 'c' },
+                                    { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
+                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe, style: 'c' },
+                                    { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
+                                    { text: u.currencyFormatter(e.precioEnvio), style: 'c'},
+                                   // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
+                                    //{ text: u.currencyFormatter(e.costoEnvio),style: 'c'},
+                                    { text: u.currencyFormatter(e.totalCobrar-e.precioEnvio), style: 'ctotal'}
+                                        
                                 ]
+                            )
                         
-                            ],
+                            , [{},{}, {}, {}, {},{}],
+                                [{},{}, {}, {
+                                    bold:true,
+                                    text:"Total a Depositar",
+                                    colSpan:2,
+                                    aligment:'right',
+                                    fillColor:'black',
+                                    color:'white',
+                                    fontSize:14,
+                                    margin:[5,5]
+
+                                },{},{
+                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.totalCobrar-e.precioEnvio),0)),
+                                    bold:true,
+                                    aligment:'right',
+                                    fillColor:'black',
+                                    color:'white',
+                                    fontSize:14,
+                                    margin:[5,5]
+                                }
+                                //   {text:x.envios.map((c)=> {return c.total+3})}
+                                    ]
+                            
+                                ],
+                            
+                            }
                         
                         }
-                        
-                    }],     [
+                ]
+                    ,     [
                         {text:"\n"}
                         ],
 

@@ -17,9 +17,9 @@ export class CierreController {
     return this.cierreService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cierreService.findOne(+id);
+  @Get(':id/:idCliente')
+  findOne(@Param('id') id: string,@Param('idCliente') idCliente: string) {
+    return this.cierreService.findOne(+id,+idCliente);
   }
 
   @Patch(':id')
@@ -33,6 +33,6 @@ export class CierreController {
   }
   @Get('/cierre/test')
   test(){
-    return this.cierreService.cierreCompleto(5)
+    return this.cierreService.cierreCompleto(17,4)
   }
 }

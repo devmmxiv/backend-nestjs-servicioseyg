@@ -44,6 +44,6 @@ export class Cliente {
     cuentas:CuentaBancaria[]
 
     @OneToOne(() => Usuario)
-    @JoinColumn()
+    @JoinColumn({name:'username'})
     usuario: Usuario
 }

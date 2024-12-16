@@ -3,10 +3,13 @@ import { ClienteService } from './cliente.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { DireccionService } from 'src/direccion/direccion.service';
+import { CierreService } from 'src/cierre/cierre.service';
 
 @Controller('cliente')
 export class ClienteController {
-  constructor(private readonly clienteService: ClienteService,
+  constructor(
+
+    private readonly clienteService: ClienteService,
     private readonly direccionService:DireccionService
   ) {}
 
@@ -20,6 +23,11 @@ export class ClienteController {
   findAll() {
     return this.clienteService.findAll();
   }
+  @Get('/clienterecolecciones/:id/:fecha')
+  findClienteRecolecciones(@Param('id') id: number,@Param('fecha') fechaInicio: string) {
+    console.log(`fecha inicio ${fechaInicio}`)
+    return this.clienteService.findClienteRecolecciones(id,fechaInicio);
+  }
   @Get('/getallactive')
   findSend() {
     return this.clienteService.findSend();
@@ -28,6 +36,7 @@ export class ClienteController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
+  
     return this.clienteService.findCliente(id);
   }
 
@@ -41,8 +50,13 @@ export class ClienteController {
   remove(@Param('id') id: number) {
     return this.clienteService.removeCliente(id);
   }
-  @Get('/recolecciones/cierre/:idCierre')
-  test(@Param('idCierre') idCierre: number) {
-    return this.clienteService.ClientesRecoleccionesCerradas(idCierre)
+  @Get('/recolecciones/cierre/:idCierre/:idCliente')
+  test(@Param('idCierre') idCierre: number,@Param('idCierre') idCliente: number) {
+    return this.clienteService.ClientesRecoleccionesCerradas(idCierre,idCliente)
   }
+  @Get('/clientebyusername/:username')
+  clientebyUsername(@Param('username') username: string) {
+    return this.clienteService.ClienteByUsername(username)
+  }
+
 }

@@ -19,4 +19,7 @@ export class Municipio {
 
     @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.municipioRecibe)
     entregas:RecoleccionEntrega[]
+
+    @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.municipioEnvia)
+    envia:RecoleccionEntrega[]
 }

@@ -17,19 +17,18 @@ import { DataSourceConfig } from './configuration/data-source';
 import { ConfigModule } from '@nestjs/config';
 import { CierreModule } from './cierre/cierre.module';
 import { EmpleadoModule } from './empleado/empleado.module';
-
-
-
-
-
-
-
+import { AuthModule } from './auth/auth.module';
+import { FileModule } from './file/file.module';
+import configurationAuth from './configuration/configuration-auth';
 
 @Module({
   imports: [
+    
     ConfigModule.forRoot({
+  
       envFilePath:`.${process.env.NODE_ENV}.env`,
-      isGlobal:true
+      isGlobal:true,
+      load:[configurationAuth],
     }),
 
     TypeOrmModule.forRoot({
@@ -60,6 +59,8 @@ import { EmpleadoModule } from './empleado/empleado.module';
     BancoModule,
     CierreModule,
     EmpleadoModule,
+    AuthModule,
+    FileModule,
 
 
   ],

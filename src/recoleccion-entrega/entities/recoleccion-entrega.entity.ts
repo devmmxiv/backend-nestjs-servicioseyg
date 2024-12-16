@@ -37,15 +37,20 @@ export class RecoleccionEntrega {
     @Column({ type: String, nullable: false, length: 50 })
     telefonoRecibe: string;
 
-    @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
-    precioProducto: number;
+   // @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
+    //precioProducto: number;
 
     @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
-    costoEnvio: number;
+    precioEnvio: number;
+    @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00,comment:"este monto se le paga al mensajero por entregar en ciertos lugares" })
+    pagoExtra: number;
     @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00, comment:"Este es el monto que se cobra al cliente que recibe"})
     totalCobrar: number;
     @Column({ type: String, nullable: false, length: 200 })
     direccionEntrega: string;
+
+    @Column({ type: 'int',nullable: false, default:0 })
+    zonaEntrega: number;
 
     @Column({type:'enum',enum:ESTATUSRECOLECCION,default:ESTATUSRECOLECCION.CREADA})
     estado: ESTATUSRECOLECCION;
@@ -72,9 +77,9 @@ export class RecoleccionEntrega {
 
     @ManyToOne(() => Direccion,(direccion)=>direccion.entregas)
     @JoinColumn({
-        name: 'idDireccionClienteEnvia',
+        name: 'idDireccionEnvia',
       })
-    direccionClienteEnvia:Direccion;
+    direccionEnvia:Direccion;
 
 
     @ManyToOne(()=>Municipio,(municipio)=>municipio.entregas)
@@ -82,6 +87,13 @@ export class RecoleccionEntrega {
         name: 'idMunicipioRecibe',
       })
     municipioRecibe:Municipio;
+
+    
+    @ManyToOne(()=>Municipio,(municipio)=>municipio.envia)
+    @JoinColumn({
+        name: 'idMunicipioEnvia',
+      })
+    municipioEnvia:Municipio;
 
     @ManyToOne(() =>Cierre,(cierre)=>cierre.recolecciones)
     @JoinColumn({
@@ -91,14 +103,20 @@ export class RecoleccionEntrega {
 
     @ManyToOne(() => Empleado,(empleado)=>empleado.enviosEntrega)
     @JoinColumn({
-        name: 'idEmpleadoEntrega',
+        name: 'idEmpleadoEntrego',
       })
-    empleadoEntrega: Empleado;
+    empleadoEntrega?: Empleado;
 
     @ManyToOne(() => Empleado,(empleado)=>empleado.enviosRecolecta)
     @JoinColumn({
-        name: 'idEmpleadoRecolecta',
+        name: 'idEmpleadoRecolecto',
       })
-    empleadoRecolecta: Empleado;
+    empleadoRecolecta?: Empleado;
+
+    @ManyToOne(() => Empleado,(empleado)=>empleado.enviosAsignados)
+    @JoinColumn({
+        name: 'idEmpleadoAsignado',
+      })
+    empleadoAsignado?: Empleado;
 
 }

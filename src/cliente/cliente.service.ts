@@ -3,7 +3,7 @@ import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Between, Repository, UpdateResult } from 'typeorm';
 import { Cliente } from './entities/cliente.entity';
 import { BaseService } from 'src/constants/BaseService';
 import { Direccion } from 'src/direccion/entities/direccion.entity';
@@ -11,6 +11,8 @@ import { RecoleccionEntrega } from 'src/recoleccion-entrega/entities/recoleccion
 import { Cierre } from 'src/cierre/entities/cierre.entity';
 import { IsLatitude } from 'class-validator';
 import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { dateFormatter } from 'src/utils/utilidades';
 
 @Injectable()
 export class ClienteService {
@@ -75,7 +77,45 @@ export class ClienteService {
   }
 
   async findCliente(id: number) {
-    return await this.clienteRepository.findOne({ where: {id}})
+    return await this.clienteRepository.findOne({ 
+      where: {id
+      }
+    })
+  }
+  async findClienteRecolecciones(id: number,fechaInicio :string) {
+    try{
+      const temp=new Date(fechaInicio);
+      console.log(temp)
+      const fechaFin1=new Date(temp.getUTCFullYear(),temp.getUTCMonth()+1,0,17);
+      console.log(fechaFin1);
+    const clientes=await this.clienteRepository.find(
+      {
+        select:{
+          envios:{
+          
+          }
+        }
+      ,
+      relations:{
+     
+      },
+ 
+      where: {
+        id,
+          envios: {
+            fechaEntrega :Between(temp,fechaFin1),
+             cerrada:true
+          
+          },
+     
+      }
+      }
+    );
+    return clientes;
+  }catch{
+      throw new ConflictException('El cliente no existe')
+    }
+
   }
 
   async updateCodigoCliente(id: number, updateClienteDto: UpdateClienteDto) {//esto es para actualizar el codigo del cliente
@@ -97,9 +137,10 @@ export class ClienteService {
 
     
   }
-  async ClientesRecoleccionesCerradas(idCierre:number){
+  async ClientesRecoleccionesCerradas(idCierre:number,idCliente :number){
 
-    const users= await this.clienteRepository.find({
+    const users= await this.clienteRepository.find(
+      {
       select:{
           
       },
@@ -109,17 +150,32 @@ export class ClienteService {
        
         },
     },
+ 
     where: {
         envios: {
             cierre:{
               id:idCierre
-            }
-            
+            },
+           
+        
         },
-    },   
-    
+        ...(idCliente>0 && {id:idCliente})
+    }
 
   })
+
   return users;
   }
+
+  async ClienteByUsername(usuario:string){
+
+    const cliente = await this.clienteRepository  
+    .createQueryBuilder("cliente")
+    .where("cliente.username = :usuario", { usuario: usuario})
+    .getOne()
+
+    return cliente;
+  }
+
+  
 }

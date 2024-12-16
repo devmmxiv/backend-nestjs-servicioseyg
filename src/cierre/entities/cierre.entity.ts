@@ -34,3 +34,7 @@ export class CierreDetalle{
     clientesRecoleciones:Cliente[]
 }
 
+export class CierreCliente{
+    cliente:Cliente;
+    clientesRecoleciones:Cliente[];
+}

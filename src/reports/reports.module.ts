@@ -7,7 +7,7 @@ import { ClienteModule } from 'src/cliente/cliente.module';
 import { CierreModule } from 'src/cierre/cierre.module';
 
 @Module({
-  imports:[PrinterModule,CierreModule],
+  imports:[PrinterModule,CierreModule,ClienteModule],
   controllers: [ReportsController],
   providers: [ReportsService],
 })

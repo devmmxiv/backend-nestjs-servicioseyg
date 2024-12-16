@@ -4,12 +4,15 @@ import { UpdateDireccionDto } from './dto/update-direccion.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Direccion } from './entities/direccion.entity';
 import { Repository } from 'typeorm';
+import { CreateDireccionEmpleadoDto } from './dto/create-direccion-empleado';
+import { DireccionEmpleado } from './entities/direccion_empleado.entity';
 
 @Injectable()
 export class DireccionService {
   constructor(
     @InjectRepository(Direccion)
-    private readonly direccionRepository:Repository<Direccion>
+    private readonly direccionRepository:Repository<Direccion>,
+  
   ) {
    
     
@@ -24,6 +27,7 @@ export class DireccionService {
     
 
   }
+ 
 
   async findAll() {
     return await this.direccionRepository.find()

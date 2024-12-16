@@ -11,7 +11,7 @@ export class Usuario {
     @Column({type: String, nullable:true,length:50 })
     correo?:string;
 
-    @Column({type: String, nullable:false,length:50 })
+    @Column({type: String, nullable:false,length:128 })
     password:string;
 
 
@@ -21,8 +21,8 @@ export class Usuario {
     @Column({type:'enum',enum:PERFILUSUARIO,default:PERFILUSUARIO.CLIENTE})
     perfilUsuario:PERFILUSUARIO
 
-    @OneToOne(() => Cliente, (cliente) => cliente.usuario,{eager:true}) // specify inverse side as a second parameter
-    cliente: Cliente
+
+    
 
 }
 

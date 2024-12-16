@@ -6,6 +6,7 @@ import { RecoleccionEntrega } from './entities/recoleccion-entrega.entity';
 import { In, Repository, UpdateResult } from 'typeorm';
 import { ESTATUSRECOLECCION } from 'src/constants/status_recoleccion';
 import { Cliente } from 'src/cliente/entities/cliente.entity';
+import { UpdateEstadoRecoleccionEntregaDto } from './dto/update-estado-recoleccion';
 
 @Injectable()
 export class RecoleccionEntregaService {
@@ -19,8 +20,10 @@ constructor(
 
   async create(createRecoleccionEntregaDto: CreateRecoleccionEntregaDto) {
     try{
+      console.log(createRecoleccionEntregaDto)
       return await this.repository.save(createRecoleccionEntregaDto)
     }catch({ name, message } ){
+      console.log(message)
       throw new ConflictException('Error creando recoleccion ',message)
     }
    
@@ -34,7 +37,7 @@ constructor(
     return `This action returns a #${id} recoleccionEntrega10`;
   }
 
-  async updateEstado(id: number, recoleccion: UpdateRecoleccionEntregaDto) {
+  async updateEstado(id: number, recoleccion: UpdateEstadoRecoleccionEntregaDto) {
 
    try{
       const rows:UpdateResult=await this.repository.update(id,{estado:recoleccion.estado});
@@ -82,16 +85,76 @@ constructor(
     return await this.repository.createQueryBuilder("recoleccionEntrega")
      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
     // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
      .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
      .where('recoleccionEntrega.estado != :estado',{estado})
      .andWhere('recoleccionEntrega.cerrada=false')
+     .orderBy('recoleccionEntrega.fechaCreacion','DESC')
      .getMany()
  
+   }
+   async findRecoleccionesPorEmpleado(id:number) {
+    const estado='ENTREGADA'
+    return await this.repository.createQueryBuilder("recoleccionEntrega")
+     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
+     .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
+     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipioe")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
+    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+     .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
+     .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
+     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+     .where('recoleccionEntrega.estado != :estado',{estado})
+     .where('recoleccionEntrega.cerrada=false')
+     .where('recoleccionEntrega.idEmpleadoAsignado=:id',{id})
+
+     .getMany()
  
    }
-
+   async findRecoleccionesPorClienteEnvia(id:number) {
+    const estado='ENTREGADA'
+    console.log('aqui');
+    return await this.repository.createQueryBuilder("recoleccionEntrega")
+     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+     .where('recoleccionEntrega.estado != :estado',{estado})
+     .andWhere('recoleccionEntrega.cerrada=false')
+     .andWhere('recoleccionEntrega.idClienteEnvia=:id',{id})
+     .getMany()
+ 
+   }
+   async findRecoleccionesPorEmpleadoAdmin() {
+    const estado='ENTREGADA'
+  
+    return await this.repository.createQueryBuilder("recoleccionEntrega")
+     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     
+     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
+    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+    // .where('recoleccionEntrega.estado != :estado',{estado})
+     .andWhere('recoleccionEntrega.cerrada=false')
+ 
+     .getMany()
+ 
+   }
    async findDatosCierre() {
     try{
       //createQueryBuilder("user").groupBy("user.name").addGroupBy("user.id")
@@ -172,11 +235,8 @@ constructor(
 
    return clientes
 
-
-
-   
-
     
    }
+
 }
  

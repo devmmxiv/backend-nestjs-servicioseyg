@@ -3,7 +3,7 @@ import { DataSource, DataSourceOptions } from "typeorm";
 //import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 ConfigModule.forRoot({
-    envFilePath:`.${process.env.NODE_ENV}.env`,
+    envFilePath:`env/.${process.env.NODE_ENV}.env`,
     isGlobal:true
   });
   const configService=new ConfigService();
@@ -21,6 +21,7 @@ ConfigModule.forRoot({
     synchronize:true,
     migrationsRun:true,
     logging:false,
+    timezone: 'Z',
     //namingStrategy:new SnakeNamingStrategy()
 
 }

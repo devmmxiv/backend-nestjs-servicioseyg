@@ -10,13 +10,17 @@ export class CreateRecoleccionEntregaDto {
     apellidoRecibe: string;
     telefonoRecibe: string;
     montoCobrar: number;
-    costoEnvio: number;
+    precioEnvio: number;
     total: number;
     direccionEntrega: string;
+    zonaEntrega:number;
     estado: ESTATUSRECOLECCION;
     clienteEnvia: Cliente;
     direccionClienteEnvia:Direccion;
     municipioRecibe:Municipio;
-    tipoPago:TIPOPAGO
+    tipoPago:TIPOPAGO;
+    idEmpleadoAsignado:number;
+    idEmpleadoEntrega:number;
+    
 
 }

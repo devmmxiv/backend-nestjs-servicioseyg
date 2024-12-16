@@ -16,3 +16,20 @@ export const currencyFormatter = (value: number) => {
     return formattedDateTime;
 
   }
+  const meses=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']
+  export const dateMonthFormat = (fecha: Date) => {
+    const indexmonth=fecha.getUTCMonth();
+    return meses[indexmonth];
+    
+
+  }
+
+  export const dateToString = (fecha: Date) => {
+
+    const isoString = fecha.toISOString();
+    // Split at the "T" character to get the date part
+    const formattedDate = isoString.split("T")[0];
+    return formattedDate;
+
+
+  }
