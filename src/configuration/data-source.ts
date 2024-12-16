@@ -18,7 +18,7 @@ console.log()
     database:process.env.DB_NAME ||configService.get('DB_NAME'),
     entities:[__dirname+'/../**/**/*.entity{.ts,.js}'],
     migrations:[__dirname+'/../../migrations/*{.ts,.js}'],
-    synchronize:false,
+    synchronize:true,
     migrationsRun:true,
     logging:false,
     timezone: 'Z',
