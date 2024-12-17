@@ -27,9 +27,9 @@ export class ClienteService {
   async createCliente(createClienteDto: CreateClienteDto) {
 
     const maxLength = 5; // maxLength is the max string length, not max # of fills
-    
+    console.log(`Cliente a crear ${createClienteDto}`)
     const c = await this.clienteRepository.save(createClienteDto)
-
+    console.log(`Cliente creado ${c}`);
     if(!c.id){
       throw new ConflictException('No se pudo Crear  el cliente')
     }
