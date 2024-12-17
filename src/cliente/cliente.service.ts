@@ -27,16 +27,20 @@ export class ClienteService {
   async createCliente(createClienteDto: CreateClienteDto) {
 
     const maxLength = 5; // maxLength is the max string length, not max # of fills
-
+    
     const c = await this.clienteRepository.save(createClienteDto)
 
+    if(!c.id){
+      throw new ConflictException('No se pudo Crear  el cliente')
+    }
     const res = c.id.toString().padStart(maxLength, "0");
     c.codigoCliente=res;
-
+    
     return await this.updateCodigoCliente(c.id, { codigoCliente: 'C-'+res});
+ 
   }
   async updateCliente(updateClienteDto: UpdateClienteDto) {
-    console.log('cliente a actualizar',updateClienteDto)
+    
     if(!updateClienteDto.id){
       throw new ConflictException('El cliente no existe')
     }
@@ -119,7 +123,7 @@ export class ClienteService {
   }
 
   async updateCodigoCliente(id: number, updateClienteDto: UpdateClienteDto) {//esto es para actualizar el codigo del cliente
-
+    console.log('cliente a actualizar',updateClienteDto.codigoCliente)
     return await this.clienteRepository.update(id, updateClienteDto);
   }
 
