@@ -27,13 +27,8 @@ export class ClienteService {
   async createCliente(createClienteDto: CreateClienteDto) {
     try{
     const maxLength = 5; // maxLength is the max string length, not max # of fills
-    console.log(`Cliente a crear `)
+
     const c = await this.clienteRepository.save(createClienteDto)
-    return c;
-    }catch(error){
-      throw new ConflictException('Error al crear cliente'+ error)
-    }
-   /* console.log(`Cliente creado ${c}`);
     if(!c.id){
       throw new ConflictException('No se pudo Crear  el cliente')
     }
@@ -41,7 +36,10 @@ export class ClienteService {
     c.codigoCliente=res;
     
     return await this.updateCodigoCliente(c.id, { codigoCliente: 'C-'+res});
- */
+    }catch(error){
+      throw new ConflictException('Error al crear cliente'+ error)
+    }
+ 
   }
   async updateCliente(updateClienteDto: UpdateClienteDto) {
     
