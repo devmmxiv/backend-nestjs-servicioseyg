@@ -48,3 +48,4 @@ export class Cliente {
     //@OneToOne(() => Usuario)
     //@JoinColumn({name:'username'})
     //usuario: Usuario
+    //
