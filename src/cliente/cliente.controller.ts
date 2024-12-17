@@ -15,7 +15,7 @@ export class ClienteController {
 
   @Post('crearcliente')
   create(@Body() createClienteDto: CreateClienteDto) {
-    console.log(`Cliente en controller ${createClienteDto}`)
+    console.log(`Cliente en controller `)
     return this.clienteService.createCliente(createClienteDto);
   }
 
