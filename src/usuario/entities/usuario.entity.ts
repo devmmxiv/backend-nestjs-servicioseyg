@@ -22,7 +22,5 @@ export class Usuario {
     perfilUsuario:PERFILUSUARIO
 
 
-    
-
 }
 

@@ -10,12 +10,12 @@ export class ClienteController {
   constructor(
 
     private readonly clienteService: ClienteService,
-    private readonly direccionService:DireccionService
+    
   ) {}
 
   @Post()
   create(@Body() createClienteDto: CreateClienteDto) {
-       
+     
     return this.clienteService.createCliente(createClienteDto);
   }
 
