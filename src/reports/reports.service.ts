@@ -39,6 +39,7 @@ export class ReportsService {
     async getCierreClienteReport(idCliente:number,fechaInicio:string):Promise<PDFKit.PDFDocument>{
     
         const cliente :Cliente[] = await this.clienteService.findClienteRecolecciones(idCliente,fechaInicio)
+        console.log(`cliente id ${idCliente} ${fechaInicio}`)
         if(cliente[0].id>0){
             const docDefinition:TDocumentDefinitions=CierreClienteReport(cliente[0]);
    

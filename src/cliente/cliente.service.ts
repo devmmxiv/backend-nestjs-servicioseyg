@@ -88,12 +88,13 @@ export class ClienteService {
       }
     })
   }
-  async findClienteRecolecciones(id: number,fechaInicio :string) {
+  async findClienteRecolecciones(id: number,fecha :string) {
     try{
-      const temp=new Date(fechaInicio);
-      console.log(temp)
-      const fechaFin1=new Date(temp.getUTCFullYear(),temp.getUTCMonth()+1,0,17);
-      console.log(fechaFin1);
+      const temp=new Date(fecha);
+      const fechaInicio=new Date(temp.getUTCFullYear(),temp.getUTCMonth(),1);
+      console.log(fechaInicio)
+      const fechaFin=new Date(temp.getUTCFullYear(),temp.getUTCMonth()+1,0,17);
+      console.log(fechaFin);
     const clientes=await this.clienteRepository.find(
       {
         select:{
@@ -109,11 +110,16 @@ export class ClienteService {
       where: {
         id,
           envios: {
-            fechaEntrega :Between(temp,fechaFin1),
+            fechaEntrega :Between(fechaInicio,fechaFin),
              cerrada:true
           
           },
      
+      },
+      order:{
+        envios:{
+          fechaEntrega : "ASC"
+        }
       }
       }
     );

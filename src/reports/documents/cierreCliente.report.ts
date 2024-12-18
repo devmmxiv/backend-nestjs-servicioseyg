@@ -1,11 +1,7 @@
-import { Body } from "@nestjs/common";
-import { table } from "console";
 import { Content, StyleDictionary, TDocumentDefinitions } from "pdfmake/interfaces";
-import { CierreDetalle } from "src/cierre/entities/cierre.entity";
+
 import { Cliente } from "src/cliente/entities/cliente.entity";
 import * as u from 'src/utils/utilidades'
-import { text } from "stream/consumers";
-import { Column } from "typeorm";
 
 const styles: StyleDictionary = {
     right:{
@@ -141,13 +137,13 @@ export const CierreClienteReport = (cliente: Cliente): TDocumentDefinitions => {
 
                                     }
                                     ,
-                                    {
+                                 /*   {
                                         text: [{ text: 'Cuenta a Depositar\n', style: 'h4r' },
                                         { text: `Cuenta Bancaria No.:${cliente.cuentas[0].numeroCuenta}\n`, style: 'h4r1' },
                                         { text: `Banco:${cliente.cuentas[0].banco.nombre}\n`, style: 'h4r1' },
                                         { text: `Tipo Cuenta:${cliente.cuentas[0].tipoCuenta}\n`, style: 'h4r1' }
                                         ]
-                                    }
+                                    }*/
                                 ]
                         },
                         [
@@ -163,8 +159,8 @@ export const CierreClienteReport = (cliente: Cliente): TDocumentDefinitions => {
 
                             table:
                             {
-                                widths:[75,'*','auto','auto','auto'],
-                                body: [['Fecha', 'Persona Recibio', 'Monto Cobrado','Precio Envio', {text:"Depositar",style:'right'}],
+                                widths:[75,'*','auto','auto'],
+                                body: [['Fecha', 'Persona Recibio', 'Precio Envio', {text:"Total",style:'right'}],
                             
                                 ...cliente.envios.map( (e) => 
                                 
@@ -173,19 +169,19 @@ export const CierreClienteReport = (cliente: Cliente): TDocumentDefinitions => {
                                    // { text: e.estado, style: 'c' },
                                     { text: u.dateFormatter(e.fechaEntrega), style: 'c' },
                                     { text: e.nombreRecibe + ' ' + e.apellidoRecibe, style: 'c' },
-                                    { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
+                                  
                                     { text: u.currencyFormatter(e.precioEnvio), style: 'c'},
                                    // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
                                     //{ text: u.currencyFormatter(e.costoEnvio),style: 'c'},
-                                    { text: u.currencyFormatter(e.totalCobrar-e.precioEnvio), style: 'ctotal'}
+                                    { text: u.currencyFormatter(e.precioEnvio), style: 'ctotal'}
                                         
                                 ]
                             )
                         
-                            , [{},{}, {}, {}, {}],
-                                [{}, {}, {
+                            , [{},{}, {}, {}],
+                                [{}, {
                                     bold:true,
-                                    text:"Total a Depositar",
+                                    text:"Total a Cobrar",
                                     colSpan:2,
                                     aligment:'right',
                                     fillColor:'black',
@@ -194,7 +190,7 @@ export const CierreClienteReport = (cliente: Cliente): TDocumentDefinitions => {
                                     margin:[5,5]
 
                                 },{},{
-                                    text:u.currencyFormatter(cliente.envios.reduce((acc,e)=> acc+ Number(e.totalCobrar-e.precioEnvio),0)),
+                                    text:u.currencyFormatter(cliente.envios.reduce((acc,e)=> acc+ Number(e.precioEnvio),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
