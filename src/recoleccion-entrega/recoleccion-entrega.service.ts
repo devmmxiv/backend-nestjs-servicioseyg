@@ -105,7 +105,7 @@ constructor(
      .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipioe")
      .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
-     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+    // .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
      .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
     // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
@@ -137,23 +137,30 @@ constructor(
  
    }
    async findRecoleccionesPorEmpleadoAdmin() {
-    const estado='ENTREGADA'
+     const estado='ENTREGADA'
+    try{
+      return await this.repository.createQueryBuilder("recoleccionEntrega")
+      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+      .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
+      .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
+      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipioe")
+      .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+    //  .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+      .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
+     // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+      .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
+      .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
+      .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+      .where('recoleccionEntrega.estado != :estado',{estado})
+      .where('recoleccionEntrega.cerrada=false')
+      //.where('recoleccionEntrega.idEmpleadoAsignado=:id',{id})
+ 
+      .getMany()
   
-    return await this.repository.createQueryBuilder("recoleccionEntrega")
-     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
-     
-     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
-     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
-     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
-     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
-    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
-     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
-     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
-    // .where('recoleccionEntrega.estado != :estado',{estado})
-     .andWhere('recoleccionEntrega.cerrada=false')
- 
-     .getMany()
- 
+    }catch({ name, message } ){
+      throw new ConflictException('Error consultando recoleccion por administrador ',message)
+    }
    }
    async findDatosCierre() {
     try{
