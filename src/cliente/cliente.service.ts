@@ -13,6 +13,7 @@ import { IsLatitude } from 'class-validator';
 import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.entity';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { dateFormatter } from 'src/utils/utilidades';
+import { TIPODIRECCION } from 'src/constants/direccion-enum';
 
 @Injectable()
 export class ClienteService {
@@ -183,11 +184,13 @@ export class ClienteService {
 
     const cliente = await this.clienteRepository  
     .createQueryBuilder("cliente")
+    .leftJoinAndSelect("cliente.direcciones","direccion")
+    .leftJoinAndSelect("direccion.municipio","municipio")
     .where("cliente.username = :usuario", { usuario: usuario})
     .getOne()
-
+   
     return cliente;
   }
-
+ 
   
 }

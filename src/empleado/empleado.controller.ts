@@ -36,4 +36,8 @@ export class EmpleadoController {
   empleadobyUsername(@Param('username') username: string) {
     return this.empleadoService.empleadoByUsername(username)
   }
+  @Get('/empleadobyusernameforperfil/:username')
+  empleadobyUsernameforPerfil(@Param('username') username: string) {
+    return this.empleadoService.empleadoByUsernameforperfil(username)
+  }
 }

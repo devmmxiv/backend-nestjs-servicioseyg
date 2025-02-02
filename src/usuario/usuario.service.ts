@@ -39,9 +39,11 @@ export class UsuarioService {
   }
 
   async findOne(usuario :CreateUsuarioDto) {
+  
     return  await this.repositoryUsuario.findOneBy({'username':usuario.username, 'password':usuario.password});
   }
   async findByUsername( username:string){
+    console.log('buscar usuario')
     return  await this.repositoryUsuario.findOneBy({'username':username});
   }
 

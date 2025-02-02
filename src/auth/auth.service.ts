@@ -28,7 +28,9 @@ constructor(
 async validateUser(createAuthDto:CreateAuthDto){
   const user=await this.usuarioService.findByUsername(createAuthDto.username);
   if(user){
-
+    if(!user.estado){
+      throw  new  UnauthorizedException('Usuario no Vigente');
+    }
     const isOk=await bcrypt.compare(createAuthDto.password,user.password);
     if(isOk){
   
@@ -53,6 +55,8 @@ async login(createAuthDto:CreateAuthDto){
     }
   
   }
+
+
   const payload:JwtPayload={
     username:user.username,
     perfilUsuario:user.perfilUsuario,

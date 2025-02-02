@@ -17,7 +17,7 @@ export class AuthController {
   @Get('data-user')
   @UseGuards(AuthGuard('jwt'))
   dataUser(@Req() request){
-   
+   console.log('datauser check jwt')
     return request.user;
   }
 }

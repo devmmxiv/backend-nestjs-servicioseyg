@@ -54,8 +54,8 @@ export class ClienteController {
   test(@Param('idCierre') idCierre: number,@Param('idCierre') idCliente: number) {
     return this.clienteService.ClientesRecoleccionesCerradas(idCierre,idCliente)
   }
-  @Get('/clientebyusername/:username')
-  clientebyUsername(@Param('username') username: string) {
+  @Get('/clientebyusernameforperfil/:username')
+  clientebyUsernameforperfil(@Param('username') username: string) {
     return this.clienteService.ClienteByUsername(username)
   }
 

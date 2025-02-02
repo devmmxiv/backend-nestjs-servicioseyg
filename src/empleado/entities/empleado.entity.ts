@@ -9,7 +9,7 @@ export class Empleado {
     @PrimaryGeneratedColumn()
     id:number;
     @Column({type: String, nullable:true,length:50 })
-    codigoEmpmleado:string;
+    codigoEmpleado:string;
     @Column({type: Boolean, default:true })
     estado:boolean;
     @Column({type: String, nullable:false,length:50 })

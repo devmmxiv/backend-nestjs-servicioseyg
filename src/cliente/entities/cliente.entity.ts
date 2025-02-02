@@ -43,9 +43,9 @@ export class Cliente {
     @OneToMany(()=>CuentaBancaria,(cuenta)=>cuenta.cliente,{cascade:['insert','update'],eager:true})
     cuentas:CuentaBancaria[]
 
-    //@OneToOne(() => Usuario)
-    //@JoinColumn({name:'username'})
-    //usuario: Usuario
+    @OneToOne(() => Usuario)
+    @JoinColumn({name:'username'})
+    usuario: Usuario
     //
 
 }

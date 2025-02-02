@@ -4,6 +4,7 @@ import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Empleado } from './entities/empleado.entity';
 import { Repository } from 'typeorm';
+import { TIPODIRECCION } from 'src/constants/direccion-enum';
 
 @Injectable()
 export class EmpleadoService {
@@ -50,4 +51,17 @@ export class EmpleadoService {
     }
     return empleado;
   }
+   async empleadoByUsernameforperfil(usuario:string){
+  
+      const cliente = await this.repositoryEmpleado  
+      .createQueryBuilder("empleado")
+      .leftJoinAndSelect("empleado.direcciones","direccion")
+      .leftJoinAndSelect("direccion.municipio","municipio")
+      .where("empleado.username = :usuario", { usuario: usuario})
+  
+   
+      .getOne()
+      console.log(cliente)
+      return cliente;
+    }
 }
