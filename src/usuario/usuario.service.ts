@@ -43,8 +43,14 @@ export class UsuarioService {
     return  await this.repositoryUsuario.findOneBy({'username':usuario.username, 'password':usuario.password});
   }
   async findByUsername( username:string){
-    console.log('buscar usuario')
-    return  await this.repositoryUsuario.findOneBy({'username':username});
+ 
+    const a=  await this.repositoryUsuario.findOneBy({'username':username});
+
+    if(a!=null){
+     // console.log('usuario encontrado'+a.username)
+
+    }
+    return a;
   }
 
   async update(id: string, updatePerfilDto: UpdateUsuarioDto) {

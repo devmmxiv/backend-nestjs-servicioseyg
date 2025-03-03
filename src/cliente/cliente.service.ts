@@ -62,7 +62,17 @@ export class ClienteService {
   }
 
   async findAll() {
-    return await this.clienteRepository.find({where:{deleted:false}})
+
+    return this.clienteRepository.createQueryBuilder("cliente")
+    .leftJoinAndSelect("cliente.direcciones","direcciones")
+    .leftJoinAndSelect("cliente.cuentas","cuentas")
+    .leftJoinAndSelect("cliente.usuario","usuario")
+    .leftJoinAndSelect("cuentas.banco","banco")
+    .leftJoinAndSelect("direcciones.municipio","municipio")
+    .select(["cliente","direcciones","cuentas","usuario.username","banco","municipio"]).getMany();
+
+    return await this.clienteRepository.find(
+      {where:{deleted:false}})
 
     return this.clienteRepository
       .createQueryBuilder('cliente')

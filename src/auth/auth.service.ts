@@ -26,12 +26,16 @@ constructor(
   
 }
 async validateUser(createAuthDto:CreateAuthDto){
+ 
   const user=await this.usuarioService.findByUsername(createAuthDto.username);
+
   if(user){
+
     if(!user.estado){
       throw  new  UnauthorizedException('Usuario no Vigente');
     }
     const isOk=await bcrypt.compare(createAuthDto.password,user.password);
+    console.log(isOk);
     if(isOk){
   
       return user;
@@ -42,6 +46,7 @@ async validateUser(createAuthDto:CreateAuthDto){
 
 async login(createAuthDto:CreateAuthDto){
   const user=await this.validateUser(createAuthDto);
+
   if(!user){
   throw  new  UnauthorizedException('Credenciales Invalidas');
   }

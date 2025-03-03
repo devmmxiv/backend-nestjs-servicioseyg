@@ -19,6 +19,8 @@ import { CierreModule } from './cierre/cierre.module';
 import { EmpleadoModule } from './empleado/empleado.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
+import { RecoleccionModule } from './recoleccion/recoleccion.module';
+
 import configurationAuth from './configuration/configuration-auth';
 
 @Module({
@@ -61,6 +63,8 @@ import configurationAuth from './configuration/configuration-auth';
     EmpleadoModule,
     AuthModule,
     FileModule,
+    RecoleccionModule,
+
 
 
   ],

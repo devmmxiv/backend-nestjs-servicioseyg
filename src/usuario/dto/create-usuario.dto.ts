@@ -11,5 +11,5 @@ export class CreateUsuarioDto {
     correo?:string;
     @IsOptional()
     estado?:Boolean;
-    
+
 }

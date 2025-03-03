@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, ParseIntPipe } from '@nestjs/common';
 import { RecoleccionEntregaService } from './recoleccion-entrega.service';
-import { CreateRecoleccionEntregaDto } from './dto/create-recoleccion-entrega.dto';
+import { CreateRecoleccionEntregaDto, InsertRecoleccionDTO } from './dto/create-recoleccion-entrega.dto';
 import { UpdateRecoleccionEntregaDto } from './dto/update-recoleccion-entrega.dto';
 import { UpdateEstadoRecoleccionEntregaDto } from './dto/update-estado-recoleccion';
 
 @Controller('recoleccion-entrega')
 export class RecoleccionEntregaController {
+  
   constructor(private readonly recoleccionEntregaService: RecoleccionEntregaService) {}
 
   @Post()
@@ -13,7 +14,11 @@ export class RecoleccionEntregaController {
    
     return this.recoleccionEntregaService.create(createRecoleccionEntregaDto);
   }
-
+  @Post('insertrecoleccion')
+  insertRecoleccion(@Body() insertRecoleccionDTO: InsertRecoleccionDTO) {
+   
+    return this.recoleccionEntregaService.insertRecoleccion(insertRecoleccionDTO);
+  }
   @Get()
   findAll() {
     return this.recoleccionEntregaService.findRecolecciones();
@@ -22,6 +27,17 @@ export class RecoleccionEntregaController {
   findRecoleccionesClienteEnvia(@Param('id') id: number) {
  
     return this.recoleccionEntregaService.findRecoleccionesPorClienteEnvia(id);
+  }
+
+  @Get('/recoleccionespagination/:take/:skip')
+  findRecoleccionesPagination(@Param('take'  ,ParseIntPipe) take: number,@Param('skip' , ParseIntPipe) skip: number ){
+ 
+    return this.recoleccionEntregaService.findRecoleccionesPagination(take,skip);
+  }
+  @Get('/recoleccionesbycliente/:id')
+  findRecoleccionesByCliente(@Param('id') id: number) {
+ 
+    return this.recoleccionEntregaService.findRecoleccionesByCliente(id);
   }
   @Get('/recoleccionempleadoadmin')
   findRecoleccionesEmpleadoAdmin() {
@@ -49,6 +65,7 @@ export class RecoleccionEntregaController {
     return this.recoleccionEntregaService.findRecoleccionesEstado();
 
   }
+  
   @Get('/listadorecoleccionescierre')
   listadoRecolecciones() {
 
@@ -59,7 +76,7 @@ export class RecoleccionEntregaController {
 
   @Put('/update/:id')
   updateRecoleccion(@Param('id') id: number, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
-    console.log('update',updateRecoleccionEntregaDto)
+ 
     return this.recoleccionEntregaService.updateRecoleccion(id, updateRecoleccionEntregaDto);
   }
 
@@ -67,7 +84,7 @@ export class RecoleccionEntregaController {
   @Patch('/update/estado/:id')
   update(@Param('id') id: number, @Body() updateEstadoRecoleccionEntregaDto:UpdateEstadoRecoleccionEntregaDto 
   ) {
-    console.log(updateEstadoRecoleccionEntregaDto);
+   
     return this.recoleccionEntregaService.updateEstado(id, updateEstadoRecoleccionEntregaDto);
   }
 

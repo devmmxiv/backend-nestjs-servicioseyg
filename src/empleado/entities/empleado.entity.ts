@@ -1,3 +1,4 @@
+import { TIPOEMPLEADO } from "src/constants/tipo_empleado";
 import { Direccion } from "src/direccion/entities/direccion.entity";
 import { DireccionEmpleado } from "src/direccion/entities/direccion_empleado.entity";
 import { RecoleccionEntrega } from "src/recoleccion-entrega/entities/recoleccion-entrega.entity";
@@ -22,6 +23,9 @@ export class Empleado {
     
     @Column({type: Boolean, default:false })
     esAdministrador:boolean
+    
+    @Column({type:'enum',enum:TIPOEMPLEADO,default:TIPOEMPLEADO.TECNICO})
+    tipoEmpleado: TIPOEMPLEADO;
 
     @OneToMany(() => DireccionEmpleado,(direccion)=>direccion.empleado,{cascade:['insert','update'],eager:true})
     direcciones: DireccionEmpleado[]

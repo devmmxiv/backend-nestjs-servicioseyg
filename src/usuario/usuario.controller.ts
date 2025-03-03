@@ -10,7 +10,7 @@ export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
   @Post('createuser')
-  @UseGuards(AuthGuard('jwt'))
+
   create(@Body() createPerfilDto: CreateUsuarioDto) {
     return this.usuarioService.create(createPerfilDto);
   }

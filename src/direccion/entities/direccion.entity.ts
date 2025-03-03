@@ -27,8 +27,8 @@ export class Direccion {
     @ManyToOne(()=>Municipio,(municipio)=>municipio.direcciones,{eager:true})
     municipio:Municipio
 
-    @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.direccionEnvia)
-    entregas:RecoleccionEntrega[];
+   // @OneToMany(()=>RecoleccionEntrega,(entrega)=>entrega.direccionEnvia)
+    //entregas:RecoleccionEntrega[];
     
 
     @Column({type:'enum',enum:TIPODIRECCION,default:TIPODIRECCION.PRINCIPAL})

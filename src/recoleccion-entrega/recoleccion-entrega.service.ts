@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateRecoleccionEntregaDto } from './dto/create-recoleccion-entrega.dto';
+import { CreateRecoleccionEntregaDto, InsertRecoleccionDTO } from './dto/create-recoleccion-entrega.dto';
 import { UpdateRecoleccionEntregaDto } from './dto/update-recoleccion-entrega.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecoleccionEntrega } from './entities/recoleccion-entrega.entity';
@@ -7,6 +7,7 @@ import { In, Repository, UpdateResult } from 'typeorm';
 import { ESTATUSRECOLECCION } from 'src/constants/status_recoleccion';
 import { Cliente } from 'src/cliente/entities/cliente.entity';
 import { UpdateEstadoRecoleccionEntregaDto } from './dto/update-estado-recoleccion';
+import { Alias } from 'typeorm/query-builder/Alias';
 
 @Injectable()
 export class RecoleccionEntregaService {
@@ -24,6 +25,16 @@ constructor(
       return await this.repository.save(createRecoleccionEntregaDto)
     }catch({ name, message } ){
       console.log(message)
+      throw new ConflictException('Error creando recoleccion ',message)
+    }
+   
+  }
+  async insertRecoleccion(insertRecoleccionDto: InsertRecoleccionDTO) {
+    try{
+  
+      return await this.repository.save(insertRecoleccionDto)
+    }catch({ name, message } ){
+    
       throw new ConflictException('Error creando recoleccion ',message)
     }
    
@@ -52,6 +63,7 @@ constructor(
        const rows:UpdateResult=await this.repository.update(id,recoleccion);
        return rows.affected==1;
      }catch({ name, message } ){
+      console.log(message)
        throw new ConflictException('Error actualizando recoleccion ',message)
      }
    }
@@ -97,6 +109,46 @@ constructor(
      .getMany()
  
    }
+   async findRecoleccionesPagination(take:number,page:number){
+    const estado='ENTREGADA'
+    const e= await this.repository.createQueryBuilder("recoleccionEntrega")
+     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
+    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+     .where('recoleccionEntrega.estado != :estado',{estado})
+     .andWhere('recoleccionEntrega.cerrada=false')
+     .orderBy('recoleccionEntrega.fechaCreacion','DESC')
+     .take(take)
+     .skip(page-1)
+     const entregas=await e.getMany();
+     const total_registros=await e.getCount();
+     return this.paginateResponse(entregas,total_registros,take,page)
+   }
+
+   paginateResponse(data,total_registros,take,page) {
+    
+    const a=page+1;
+    const result=data;
+    const total=total_registros;
+    const lastPage=Math.ceil(total/take);
+    const nextPage=page+1 >lastPage ? null :page+1;
+
+    const prevPage=page-1 < 1 ? 0 :page-1;
+    return {
+      statusCode: 'success',
+      data: [...result],
+      count: total,
+      currentPage: page,
+      nextPage: nextPage,
+      prevPage: prevPage,
+      lastPage: lastPage,
+    }
+  }
    async findRecoleccionesPorEmpleado(id:number) {
     const estado='ENTREGADA'
     return await this.repository.createQueryBuilder("recoleccionEntrega")
@@ -121,7 +173,7 @@ constructor(
    }
    async findRecoleccionesPorClienteEnvia(id:number) {
     const estado='ENTREGADA'
-    console.log('aqui');
+
     return await this.repository.createQueryBuilder("recoleccionEntrega")
      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
@@ -133,6 +185,33 @@ constructor(
      .where('recoleccionEntrega.estado != :estado',{estado})
      .andWhere('recoleccionEntrega.cerrada=false')
      .andWhere('recoleccionEntrega.idClienteEnvia=:id',{id})
+     .getMany()
+ 
+   }
+   async findRecoleccionesByCliente(id:number) {
+    const estado='ENTREGADA'
+
+    return await this.repository.createQueryBuilder("recoleccionEntrega")
+
+     .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoAsignado")
+
+    // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
+     .where('recoleccionEntrega.idClienteEnvia=cliente.id')
+     .andWhere('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+     .andWhere('recoleccionEntrega.estado != :estado',{estado})
+     .andWhere('recoleccionEntrega.cerrada=false')
+     .andWhere('recoleccionEntrega.idClienteEnvia=:id',{id})
+    .select(['recoleccionEntrega.id','recoleccionEntrega.precioEnvio','recoleccionEntrega.totalCobrar',
+      'cliente.id',
+      'recoleccionEntrega.estado','recoleccionEntrega.fechaCreacion',
+      'recoleccionEntrega.direccionEntrega','recoleccionEntrega.zonaEntrega','recoleccionEntrega.tipoPago',
+      'recoleccionEntrega.nombreRecibe','recoleccionEntrega.apellidoRecibe','recoleccionEntrega.telefonoRecibe'
+      ,'municipio.id','municipio.nombre','empleadoAsignado.nombre','empleadoAsignado.id','empleadoAsignado.apellido'
+ 
+    ])
      .getMany()
  
    }

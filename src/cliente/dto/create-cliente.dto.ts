@@ -2,6 +2,7 @@ import { Type } from "class-transformer";
 import { IsArray, IsBoolean,  IsOptional, IsString } from "class-validator";
 import { CreateCuentaBancariaDto } from "src/cuenta-bancaria/dto/create-cuenta-bancaria.dto";
 import { CreateDireccionDto } from "src/direccion/dto/create-direccion.dto";
+import { CreateUsuarioDto } from "src/usuario/dto/create-usuario.dto";
 
 
 export class CreateClienteDto {
@@ -29,7 +30,7 @@ export class CreateClienteDto {
     cuentas:CreateCuentaBancariaDto[]
 
 
- //   @Type(()=>CreatePerfilDto)
- //   perfil:CreatePerfilDto[]
+   //@Type(()=>CreatePerfilDto)
+   // perfil:CreatePerfilDto[]
 
 }

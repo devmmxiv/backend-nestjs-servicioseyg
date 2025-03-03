@@ -40,4 +40,10 @@ export class EmpleadoController {
   empleadobyUsernameforPerfil(@Param('username') username: string) {
     return this.empleadoService.empleadoByUsernameforperfil(username)
   }
+  @Get('/empleadostecnicos/tecnico')
+  empleadosTecnicos() {
+
+    return this.empleadoService.empleadosTecnicos();
+  }
+
 }

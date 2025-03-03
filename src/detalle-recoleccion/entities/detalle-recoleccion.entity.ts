@@ -6,10 +6,11 @@ import { TIPOPAGO } from "src/constants/tipo_pago";
 import { Direccion } from "src/direccion/entities/direccion.entity";
 import { Empleado } from "src/empleado/entities/empleado.entity";
 import { Municipio } from "src/municipio/entities/municipio.entity";
+import { Recoleccion } from "src/recoleccion/entities/recoleccion.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class RecoleccionEntrega {
+export class DetalleRecoleccion {
 
     @PrimaryGeneratedColumn()
     id?: number;
@@ -28,29 +29,27 @@ export class RecoleccionEntrega {
     @CreateDateColumn()
     fechaEntrega: Date;
     
-    @Column({ type: String, nullable: false, length: 50 })
-    nombreRecibe: string;
+    @Column({ type: String, nullable: false, length:200  })
+    nombreCompleto: string;
+
 
     @Column({ type: String, nullable: false, length: 50 })
-    apellidoRecibe: string;
-
-    @Column({ type: String, nullable: false, length: 50 })
-    telefonoRecibe: string;
+    telefono: string;
 
    // @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
     //precioProducto: number;
 
     @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00 })
-    precioEnvio: number;
+    preciodeEnvio: number;
     @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00,comment:"este monto se le paga al mensajero por entregar en ciertos lugares" })
     pagoExtra: number;
     @Column({ type: 'decimal',  precision: 6, scale: 2,nullable: false, default:0.00, comment:"Este es el monto que se cobra al cliente que recibe"})
     totalCobrar: number;
     @Column({ type: String, nullable: false, length: 200 })
-    direccionEntrega: string;
+    direccion: string;
 
     @Column({ type: 'int',nullable: false, default:0 })
-    zonaEntrega: number;
+    zona: number;
 
     @Column({type:'enum',enum:ESTATUSRECOLECCION,default:ESTATUSRECOLECCION.CREADA})
     estado: ESTATUSRECOLECCION;
@@ -64,25 +63,15 @@ export class RecoleccionEntrega {
     @Column({ type: Number, nullable: true })
     altitud?: number;
 
-    @Column({ type: Boolean, default:false })
-    cerrada: boolean;
 
-    @Column({ type: Boolean, default:false,comment:"true clienteRecibe   paga montocobrar+envio" })
-    clienteRecibePagaEnvio: boolean;
-    
-    @ManyToOne(() => Cliente,(cliente)=>cliente.envios)
+
+    @Column({ type: String,  nullable: true, length: 200 })
+    observaciones: String;
+    @ManyToOne(() => Recoleccion,(recoleccion)=>recoleccion.detalle)
     @JoinColumn({
-        name: 'idClienteEnvia',
+        name: 'idRecoleccion',
       })
-    clienteEnvia: Cliente;
-
-  /*  @ManyToOne(() => Direccion,(direccion)=>direccion.entregas)
-    @JoinColumn({
-        name: 'idDireccionEnvia',
-      })
-    direccionEnvia:Direccion;
-    */
-
+    recoleccion: Recoleccion;
 
     @ManyToOne(()=>Municipio,(municipio)=>municipio.entregas)
     @JoinColumn({
@@ -90,13 +79,7 @@ export class RecoleccionEntrega {
       })
     municipioRecibe:Municipio;
 
-    
-    /*@ManyToOne(()=>Municipio,(municipio)=>municipio.envia)
-    @JoinColumn({
-        name: 'idMunicipioEnvia',
-      })
-    municipioEnvia:Municipio;*/
-
+ 
     @ManyToOne(() =>Cierre,(cierre)=>cierre.recolecciones)
     @JoinColumn({
       name: 'idCierre',

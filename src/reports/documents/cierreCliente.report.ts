@@ -89,8 +89,8 @@ export const CierreClienteReport = (cliente: Cliente): TDocumentDefinitions => {
                     //datos empresa
                     {
                         text: [
-                            { text: 'San Miguel Petapa, Guatemala\n', style: 'h2' },
-                            'Colonia Villa Real'
+                            { text: 'Calle Mariscal 5-15 zona 11, \n', style: 'h2' },
+                            'Comercial Paseo Marisal Local 12 2do Nivel'
                         ]
 
                     }
