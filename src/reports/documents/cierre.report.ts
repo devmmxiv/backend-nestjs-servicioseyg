@@ -170,16 +170,17 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
 
                             table:
                             {
-                                widths:[75,'auto','*','auto','auto','auto'],
-                                body: [['Estado','Fecha', 'Persona Recibio', 'Monto Cobrado','Precio Envio', {text:"Depositar",style:'right'}],
+                                widths:['auto',75,'auto','*','auto','auto','auto'],
+                                body: [['No','Estado','Fecha', 'Persona Recibio', 'Monto Cobrado','Precio Envio', {text:"Depositar",style:'right'}],
                             
-                                ...x.envios.map( (e) => 
+                                ...x.envios.map( (e,index) => 
                                 
                                 
                                     [
+                                    { text:index+1, style: 'c' },
                                     { text: e.estado, style: 'c' },
                                     { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
-                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega, style: 'c' },
+                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega.substring(0,20), style: 'c' },
                                     { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
                                     { text: u.currencyFormatter(e.precioEnvio), style: 'c'},
                                    // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
@@ -189,8 +190,8 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                 ]
                             )
                         
-                            , [{},{}, {}, {}, {},{}],
-                                [{},{}, {}, {
+                            , [{},{},{}, {}, {}, {},{}],
+                                [{},{},{}, {}, {
                                     bold:true,
                                     text:"Total a Depositar",
                                     colSpan:2,
@@ -236,7 +237,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
 }
 export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumentDefinitions => {
     const date = new Date();
-   
+   const i=0;
 
     return {
     
@@ -296,7 +297,7 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
             { text: "\n" },
             ...cierre.empleadoRecolecciones.map((x) => (
 
-
+                    
 
                 [
                     [
@@ -330,16 +331,17 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
 
                             table:
                             {
-                                widths:[75,'auto','*','auto','auto'],
-                                body: [['Estado','Fecha', 'Persona Recibio', 'Tipo de Cobro',{text:"Monto Cobrado",style:'right'}],
+                                widths:['auto',75,'auto','*','auto','*'],
+                                body: [[{text:"No.",style:'center'},'Estado','Fecha', 'Persona Recibio', 'Tipo de Cobro',{text:"Monto Cobrado",style:'right'}],
                             
-                                ...x.enviosAsignados.map( (e) => 
-                                
+                                ...x.enviosAsignados.map( (e,index) => 
+                               
                                 
                                     [
+                                    { text: index+1, style: 'c' },
                                     { text: e.estado, style: 'c' },
                                     { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
-                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega.substring(0,10), style: 'c' },
+                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega.substring(0,20), style: 'c' },
                                   //  { text:(e.tipoPago != TIPOPAGO.TRANSFERENCIA ? u.currencyFormatter(e.totalCobrar): u.currencyFormatter(e.totalCobrar)), style: 'c'},
                                     { text: e.tipoPago, style: 'c'},
                                    // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
@@ -349,8 +351,8 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
                                 ]
                             )
                         
-                            , [{},{}, {}, {},{}],
-                                [{}, {}, {
+                            , [{},{},{}, {}, {},{}],
+                                [{},{}, {}, {
                                     bold:true,
                                     text:"Total a Depositar",
                                     colSpan:2,

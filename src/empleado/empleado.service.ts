@@ -6,6 +6,7 @@ import { Empleado } from './entities/empleado.entity';
 import { Repository } from 'typeorm';
 import { TIPODIRECCION } from 'src/constants/direccion-enum';
 import { TIPOEMPLEADO } from 'src/constants/tipo_empleado';
+import { ESTATUSRECOLECCION } from 'src/constants/status_recoleccion';
 
 @Injectable()
 export class EmpleadoService {
@@ -103,12 +104,12 @@ export class EmpleadoService {
       },
    
       where: {
-          enviosAsignados: {
+          enviosAsignados:
+           {
               cierre:{
                 id:idCierre
               },
-             
-          
+              estado:ESTATUSRECOLECCION.ENTREGADA
           },
           ...(idEmpleado>0 && {id:idEmpleado})
       }
