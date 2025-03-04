@@ -11,7 +11,7 @@ export const currencyFormatter = (value: number) => {
   export const dateFormatter = (fecha: Date) => {
     const date = new Date(fecha);
   //  const formattedDateTime = date.toLocaleString('es-GT', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
-  const formattedDateTime = fecha.toLocaleString('es-GT', { year: 'numeric', month: '2-digit', day: 'numeric'});
+  const formattedDateTime = fecha.toLocaleString('es-GT', { year: 'numeric', month: '2-digit', day: 'numeric',timeZone: "America/Guatemala"});
 
     return formattedDateTime;
 
