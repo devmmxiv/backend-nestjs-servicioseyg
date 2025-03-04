@@ -73,7 +73,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
     return {
     
         header: {
-            text: [{text:`Reporte Cierre diario\n Fecha Creacion ${u.dateFormatter(date)}`}],
+            text: [{text:`Reporte Cierre diario\n Fecha Reporte ${u.dateFormatter2(date)}`}],
             alignment: 'right',
             margin: [10 ,10]
         },

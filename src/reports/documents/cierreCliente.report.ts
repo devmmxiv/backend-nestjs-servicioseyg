@@ -69,7 +69,7 @@ export const CierreClienteReport = (cliente: Cliente): TDocumentDefinitions => {
     return {
     
         header: {
-            text: [{text:`Reporte Mensual\n Fecha Creacion ${u.dateFormatter(date)}\n`}],
+            text: [{text:`Reporte Mensual\n Fecha Reporte ${u.dateFormatter2(date)}\n`}],
             alignment: 'right',
             margin: [8 ,8]
         },
