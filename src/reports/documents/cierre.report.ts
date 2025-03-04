@@ -1,7 +1,8 @@
 import { Body } from "@nestjs/common";
 import { table } from "console";
 import { Content, StyleDictionary, TDocumentDefinitions } from "pdfmake/interfaces";
-import { CierreDetalle } from "src/cierre/entities/cierre.entity";
+import { CierreDetalle, CierreEmpleadoDetalle } from "src/cierre/entities/cierre.entity";
+import { TIPOPAGO } from "src/constants/tipo_pago";
 import * as u from 'src/utils/utilidades'
 import { text } from "stream/consumers";
 import { Column } from "typeorm";
@@ -84,7 +85,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
         content: [logo,
 
             {
-                text: "Mensajeria EyG",
+                text: "Mensajeria EG",
                 style: 'h1'
             },
             {
@@ -178,7 +179,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     [
                                     { text: e.estado, style: 'c' },
                                     { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
-                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe, style: 'c' },
+                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega, style: 'c' },
                                     { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
                                     { text: u.currencyFormatter(e.precioEnvio), style: 'c'},
                                    // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
@@ -201,6 +202,166 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
 
                                 },{},{
                                     text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.totalCobrar-e.precioEnvio),0)),
+                                    bold:true,
+                                    aligment:'right',
+                                    fillColor:'black',
+                                    color:'white',
+                                    fontSize:14,
+                                    margin:[5,5]
+                                }
+                                //   {text:x.envios.map((c)=> {return c.total+3})}
+                                    ]
+                            
+                                ],
+                            
+                            }
+                        
+                        }
+                ]
+                    ,     [
+                        {text:"\n"}
+                        ],
+
+                ]
+
+            )
+
+
+            ),
+
+        ],
+        styles: styles
+    }
+
+}
+export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumentDefinitions => {
+    const date = new Date();
+   
+
+    return {
+    
+        header: {
+            text: [{text:`Reporte Cierre diario por mensajero\nFecha Reporte ${u.dateFormatter2(date)}\n`}],
+            alignment: 'right',
+            margin: [10 ,10]
+        },
+        footer:{
+            text:"By Softnet",
+            alignment:'right',
+            margin:[10,10]
+        },
+        content: [logo,
+
+            {
+                text: "Mensajeria EG",
+                style: 'h1'
+            },
+            {
+                columns: [
+                    //datos empresa
+                    {
+                        text: [
+                                { text: 'Calle Mariscal 5-15 zona 11, \n', style: 'h2' },
+                            'Comercial Paseo Marisal Local 12 2do Nivel'
+                        ]
+
+                    }
+                    ,
+                    //
+                    {
+                        text: [{
+                            text: `Numero de Cierre: ${cierre.id}
+                            Fecha Cierre:
+                            ${u.dateFormatter(cierre.fechaCierre)}`
+
+                        }],
+                        alignment: 'right'
+                    },
+                ],
+
+
+
+            },
+            {
+                text: "\n"
+
+
+            },
+            {
+                canvas:
+                    [
+                        { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 }
+                    ]
+            },
+            { text: "\n" },
+            ...cierre.empleadoRecolecciones.map((x) => (
+
+
+
+                [
+                    [
+                        {
+                            columns:
+                                [
+                                    {  
+                                 
+                                        text: [
+                                            { text: `Codigo Mensajero : ${x.codigoEmpleado} \n`, style: 'h4' },
+                                            { text: `Nombre: ${x.nombre + ' ' + x.apellido} ` },
+
+                                                                                    ],
+
+
+                                    }
+                                    ,
+                                    
+                                ]
+                        },
+                        [
+                            {text:"\n"}
+                            ],
+                    ],
+                    [
+                        {
+                        
+
+                            layout: 'lightHorizontalLines',
+                            headerRows: 1,
+
+                            table:
+                            {
+                                widths:[75,'auto','*','auto','auto'],
+                                body: [['Estado','Fecha', 'Persona Recibio', 'Tipo de Cobro',{text:"Monto Cobrado",style:'right'}],
+                            
+                                ...x.enviosAsignados.map( (e) => 
+                                
+                                
+                                    [
+                                    { text: e.estado, style: 'c' },
+                                    { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
+                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega.substring(0,10), style: 'c' },
+                                  //  { text:(e.tipoPago != TIPOPAGO.TRANSFERENCIA ? u.currencyFormatter(e.totalCobrar): u.currencyFormatter(e.totalCobrar)), style: 'c'},
+                                    { text: e.tipoPago, style: 'c'},
+                                   // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
+                                    //{ text: u.currencyFormatter(e.costoEnvio),style: 'c'},
+                                    { text:  e.tipoPago != TIPOPAGO.TRANSFERENCIA ? u.currencyFormatter(e.totalCobrar): u.currencyFormatter(0.00), style: 'ctotal'}
+                                        
+                                ]
+                            )
+                        
+                            , [{},{}, {}, {},{}],
+                                [{}, {}, {
+                                    bold:true,
+                                    text:"Total a Depositar",
+                                    colSpan:2,
+                                    aligment:'right',
+                                    fillColor:'black',
+                                    color:'white',
+                                    fontSize:14,
+                                    margin:[5,5]
+
+                                },{},{
+                                    text:u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=> acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',

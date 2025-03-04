@@ -1,12 +1,13 @@
 import { ConflictException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCierreDto } from './dto/create-cierre.dto';
 import { UpdateCierreDto } from './dto/update-cierre.dto';
-import { Cierre,  CierreDetalle } from './entities/cierre.entity';
+import { Cierre,  CierreDetalle, CierreEmpleadoDetalle } from './entities/cierre.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecoleccionEntrega } from 'src/recoleccion-entrega/entities/recoleccion-entrega.entity';
 import { RecoleccionEntregaService } from 'src/recoleccion-entrega/recoleccion-entrega.service';
 import { ClienteService } from 'src/cliente/cliente.service';
+import { EmpleadoService } from 'src/empleado/empleado.service';
 
 @Injectable()
 export class CierreService {
@@ -16,7 +17,8 @@ export class CierreService {
   constructor(
     @InjectRepository(Cierre)
     private readonly repository:Repository<Cierre>,
-    private readonly serviceCliente:ClienteService
+    private readonly serviceCliente:ClienteService,
+    private readonly serviceEmpleado:EmpleadoService
   ) {
   }
 
@@ -55,7 +57,29 @@ export class CierreService {
       
     }
   }
+  async cierreporEmpleado(idCierre:number,idEmpleado:number){
+    let cierre=new CierreEmpleadoDetalle()
+   
+    try {
+  
+      const c =await this.repository.findOne({where:{id:idCierre}})
 
+      if(c === null){
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      }
+      
+      const empleadoscierre=await this.serviceEmpleado.cierreporempleado(idCierre,idEmpleado)
+      cierre.id=c.id
+      cierre.fechaCierre=c.fechaCierre
+      cierre.empleadoRecolecciones=empleadoscierre;
+
+      return cierre
+    } catch (error) {
+
+      throw error
+      
+    }
+  }
   async findAll() {
     return this.repository.createQueryBuilder('cierre')
     .select(['id','fechaCierre'])

@@ -69,6 +69,7 @@ export class ClienteService {
     .leftJoinAndSelect("cliente.usuario","usuario")
     .leftJoinAndSelect("cuentas.banco","banco")
     .leftJoinAndSelect("direcciones.municipio","municipio")
+    .where("cliente.deleted=:deleted", { deleted: false})
     .select(["cliente","direcciones","cuentas","usuario.username","banco","municipio"]).getMany();
 
     return await this.clienteRepository.find(

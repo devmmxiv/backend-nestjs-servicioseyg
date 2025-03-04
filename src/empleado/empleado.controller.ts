@@ -45,5 +45,9 @@ export class EmpleadoController {
 
     return this.empleadoService.empleadosTecnicos();
   }
-
+  /*@Get('/empleadocierre/:idCierre/:idEmpleado')//este controlador se usar solo para pruebas ya que se consulta la informacion por postman
+  empleadoCierre(@Param('idCierre') idCierre: number ,@Param('idEmpleado') idEmpleado: number) {
+    console.log("entreg aqui")
+    return this.empleadoService.cierreporempleado(idCierre,idEmpleado);
+  }*/
 }

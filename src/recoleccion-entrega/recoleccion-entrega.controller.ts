@@ -49,6 +49,8 @@ export class RecoleccionEntregaController {
  
     return this.recoleccionEntregaService.findRecoleccionesPorEmpleado(id);
   }
+
+
   @Get('/recoleccion/:id')
   findOne(@Param('id') id: string) {
     return this.recoleccionEntregaService.findOne(+id);

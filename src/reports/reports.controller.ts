@@ -7,7 +7,7 @@ export class ReportsController {
 
   @Get('cierre/:idCierre/:idCliente')
   async getcierreReport(@Param('idCierre') idCierre: number,@Param('idCliente') idCliente: number,@Res() response:Response){
-    console.log(`id cierre ${idCierre} id cliente ${idCliente}`)
+   
     try{
     const pdfDoc=await this.reportsService.getCierreReport(idCierre,idCliente);
   
@@ -23,7 +23,23 @@ export class ReportsController {
     }
   }
 
+  @Get('cierreporempleado/:idCierre/:idEmpleado')
+  async getcierreEmpleadoReport(@Param('idCierre') idCierre: number,@Param('idEmpleado') idEmpleado: number,@Res() response:Response){
+   
+    try{
+    const pdfDoc=await this.reportsService.getCierreEmpleadoReport(idCierre,idEmpleado);
+  
+    response.setHeader('Content-type','application/pdf')
+    pdfDoc.info.Title='Cierre Por Mensajero';
+    pdfDoc.pipe(response);
 
+    pdfDoc.end();
+
+    return pdfDoc
+    }catch(error){
+      throw error
+    }
+  }
 
 @Get('cierrecliente/:idCliente/:fecha/')
 async getEntregasClienteReport(@Param('idCliente') idCliente: number,@Param('fecha') fechaInicio: string,

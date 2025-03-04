@@ -2,10 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { promises } from 'dns';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { PrinterService } from 'src/printer/printer.service';
-import { CierreReport } from './documents/cierre.report';
+import { CierreporEmpleadoReport, CierreReport } from './documents/cierre.report';
 import { ClienteService } from 'src/cliente/cliente.service';
 import { CierreService } from 'src/cierre/cierre.service';
-import { Cierre, CierreDetalle } from 'src/cierre/entities/cierre.entity';
+import { Cierre, CierreDetalle, CierreEmpleadoDetalle } from 'src/cierre/entities/cierre.entity';
 import { buffer } from 'stream/consumers';
 import { Cliente } from 'src/cliente/entities/cliente.entity';
 import { CierreClienteReport } from './documents/cierreCliente.report';
@@ -28,6 +28,19 @@ export class ReportsService {
         const cierre:CierreDetalle= await this.cierreService.cierreCompleto(idCierre,idCliente);
         if(cierre.id>0){
             const docDefinition:TDocumentDefinitions=CierreReport(cierre);
+   
+        
+            return this.printer.createPdf(docDefinition);
+        }else{
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
+     
+    }
+    async getCierreEmpleadoReport(idCierre:number,idEmpleado:number):Promise<PDFKit.PDFDocument>{
+    
+        const cierre:CierreEmpleadoDetalle= await this.cierreService.cierreporEmpleado(idCierre,idEmpleado);
+        if(cierre.id>0){
+            const docDefinition:TDocumentDefinitions=CierreporEmpleadoReport(cierre);
    
         
             return this.printer.createPdf(docDefinition);

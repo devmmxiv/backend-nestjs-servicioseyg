@@ -153,16 +153,16 @@ constructor(
     const estado='ENTREGADA'
     return await this.repository.createQueryBuilder("recoleccionEntrega")
      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
-     .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
-     .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
+    // .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
+    // .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipioe")
      .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
     // .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
      .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
     // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
-     .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
-     .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
+    // .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
+    // .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
      .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
      .where('recoleccionEntrega.estado != :estado',{estado})
      .where('recoleccionEntrega.cerrada=false')
@@ -171,6 +171,7 @@ constructor(
      .getMany()
  
    }
+ 
    async findRecoleccionesPorClienteEnvia(id:number) {
     const estado='ENTREGADA'
 
@@ -185,6 +186,7 @@ constructor(
      .where('recoleccionEntrega.estado != :estado',{estado})
      .andWhere('recoleccionEntrega.cerrada=false')
      .andWhere('recoleccionEntrega.idClienteEnvia=:id',{id})
+
      .getMany()
  
    }

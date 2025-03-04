@@ -1,5 +1,6 @@
 import { LargeNumberLike } from "crypto";
 import { Cliente } from "src/cliente/entities/cliente.entity";
+import { Empleado } from "src/empleado/entities/empleado.entity";
 import { RecoleccionEntrega } from "src/recoleccion-entrega/entities/recoleccion-entrega.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -37,4 +38,13 @@ export class CierreDetalle{
 export class CierreCliente{
     cliente:Cliente;
     clientesRecoleciones:Cliente[];
+}
+export class CierreEmpleado{
+    empleado:Empleado;
+    empleadosRecolecciones:Empleado[];
+}
+export class CierreEmpleadoDetalle{
+    id:number;
+    fechaCierre:Date;
+    empleadoRecolecciones:Empleado[]
 }

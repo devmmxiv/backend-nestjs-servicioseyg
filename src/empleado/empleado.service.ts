@@ -75,5 +75,47 @@ export class EmpleadoService {
       .getMany()
       return empleados
     }
+    async empleadoCierre(id:number,cierreid:number){
+      const cierre=await this.repositoryEmpleado.createQueryBuilder("empleado")
+      .leftJoinAndSelect("empleado.enviosAsignados","envios")
+      .leftJoinAndSelect("envios.cierre","cierre")
+     // .leftJoinAndSelect("envios.cierre","cierre")
+      .where("empleado.id=envios.idEmpleadoAsignado ")
+      //.andWhere("envios.idCierre=cierre.id")
+      .andWhere("cierre.id = :cierreid",{cierreid:cierreid})
+     .andWhere("empleado.id=:idEmpleado", {idEmpleado:id})
+     .select(['empleado','envios'])
+      .getMany()
+      return cierre
+    }
+    async cierreporempleado(idCierre:number,idEmpleado :number){  
+   
+      const users= await this.repositoryEmpleado.find(
+        {
+        select:{
+            
+        },
+        relations: {
+          enviosAsignados: {
+            cierre:true
+         
+          },
+      },
+   
+      where: {
+          enviosAsignados: {
+              cierre:{
+                id:idCierre
+              },
+             
+          
+          },
+          ...(idEmpleado>0 && {id:idEmpleado})
+      }
+  
+    })
+  
+    return users;
+    }
 }
   
