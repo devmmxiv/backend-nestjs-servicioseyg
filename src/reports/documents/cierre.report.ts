@@ -377,7 +377,7 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
 
                                 },{},{
                                     //u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0: acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)
-                                    text:u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)),0)),
+                                    text:u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? acc+ 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
