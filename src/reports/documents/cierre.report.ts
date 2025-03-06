@@ -202,7 +202,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     fontSize:14,
                                     margin:[5,5]
 
-                                }, {},{ text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)),0)),
+                                }, {},{ text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.totalCobrar)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
@@ -215,7 +215,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     color:'white',
                                     fontSize:14,
                                     margin:[5,5]},{
-                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? (0-e.precioEnvio):( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar-e.precioEnvio:0.00)),0)),
+                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? (0-e.precioEnvio):( acc+ Number(e.totalCobrar-e.precioEnvio)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
