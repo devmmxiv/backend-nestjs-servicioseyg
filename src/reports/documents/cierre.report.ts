@@ -171,7 +171,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
 
                             table:
                             {
-                                widths:['auto',75,'auto','*','auto','auto','*'],
+                                widths:['auto','auto','auto','auto','*','*','*'],
                                 body: [['No','Estado','Fecha', 'Persona Recibio', 'Monto Cobrado','Precio Envio', {text:"Depositar",style:'right'}],
                             
                                 ...x.envios.map( (e,index) => 
@@ -215,7 +215,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     color:'white',
                                     fontSize:14,
                                     margin:[5,5]},{
-                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar-e.precioEnvio:0.00)),0)),
+                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? (0-e.precioEnvio):( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar-e.precioEnvio:0.00)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
