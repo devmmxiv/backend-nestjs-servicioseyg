@@ -170,7 +170,8 @@ export class ClienteService {
       },
       relations: {
         envios: {
-          cierre:true
+          cierre:true,
+          municipioRecibe:true
        
         },
     },

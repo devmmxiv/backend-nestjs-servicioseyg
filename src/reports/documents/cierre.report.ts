@@ -2,6 +2,7 @@ import { Body } from "@nestjs/common";
 import { table } from "console";
 import { Content, StyleDictionary, TDocumentDefinitions } from "pdfmake/interfaces";
 import { CierreDetalle, CierreEmpleadoDetalle } from "src/cierre/entities/cierre.entity";
+import { ESTATUSRECOLECCION } from "src/constants/status_recoleccion";
 import { TIPOPAGO } from "src/constants/tipo_pago";
 import * as u from 'src/utils/utilidades'
 import { text } from "stream/consumers";
@@ -46,7 +47,7 @@ const styles: StyleDictionary = {
     },
     c: {
         fontSize: 10,
-
+alignment: 'left'
     },
     ctotal: {
         fontSize: 10,
@@ -170,7 +171,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
 
                             table:
                             {
-                                widths:['auto',75,'auto','*','auto','auto','auto'],
+                                widths:['auto',75,'auto','*','auto','auto','*'],
                                 body: [['No','Estado','Fecha', 'Persona Recibio', 'Monto Cobrado','Precio Envio', {text:"Depositar",style:'right'}],
                             
                                 ...x.envios.map( (e,index) => 
@@ -180,20 +181,20 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     { text:index+1, style: 'c' },
                                     { text: e.estado, style: 'c' },
                                     { text: u.dateFormatter(e.fechaActualizacion), style: 'c' },
-                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega.substring(0,20), style: 'c' },
-                                    { text: u.currencyFormatter(e.totalCobrar), style: 'c'},
+                                    { text: e.nombreRecibe + ' ' + e.apellidoRecibe +' - '+e.direccionEntrega.substring(0,20)+'- zona '+e.zonaEntrega+'-'+e.municipioRecibe.nombre, style: 'c' },
+                                    { text: (e.estado!=ESTATUSRECOLECCION.NORECIBIDA?u.currencyFormatter(e.totalCobrar):u.currencyFormatter(0.00)), style: 'c'},
                                     { text: u.currencyFormatter(e.precioEnvio), style: 'c'},
                                    // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
                                     //{ text: u.currencyFormatter(e.costoEnvio),style: 'c'},
-                                    { text: u.currencyFormatter(e.totalCobrar-e.precioEnvio), style: 'ctotal'}
+                                    { text:(e.estado!=ESTATUSRECOLECCION.NORECIBIDA?u.currencyFormatter(e.totalCobrar-e.precioEnvio):u.currencyFormatter(0.00-e.precioEnvio)), style: 'ctotal'}
                                         
                                 ]
                             )
                         
                             , [{},{},{}, {}, {}, {},{}],
-                                [{},{},{}, {}, {
+                                [{},{}, {
                                     bold:true,
-                                    text:"Total a Depositar",
+                                    text:"Totales",
                                     colSpan:2,
                                     aligment:'right',
                                     fillColor:'black',
@@ -201,8 +202,20 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     fontSize:14,
                                     margin:[5,5]
 
-                                },{},{
-                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.totalCobrar-e.precioEnvio),0)),
+                                }, {},{ text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)),0)),
+                                    bold:true,
+                                    aligment:'right',
+                                    fillColor:'black',
+                                    color:'white',
+                                    fontSize:14,
+                                    margin:[5,5]},{  text:u.currencyFormatter(x.envios.reduce((acc,e)=> acc+ Number(e.precioEnvio),0)),
+                                    bold:true,
+                                    aligment:'right',
+                                    fillColor:'black',
+                                    color:'white',
+                                    fontSize:14,
+                                    margin:[5,5]},{
+                                    text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar-e.precioEnvio:0.00)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
@@ -346,7 +359,7 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
                                     { text: e.tipoPago, style: 'c'},
                                    // { text: u.currencyFormatter(e.totalCobrar), style: 'ctotal'}
                                     //{ text: u.currencyFormatter(e.costoEnvio),style: 'c'},
-                                    { text:  e.tipoPago != TIPOPAGO.TRANSFERENCIA ? u.currencyFormatter(e.totalCobrar): u.currencyFormatter(0.00), style: 'ctotal'}
+                                    { text: e.estado==ESTATUSRECOLECCION.NORECIBIDA?u.currencyFormatter(0.00):(e.tipoPago==TIPOPAGO.TRANSFERENCIA?u.currencyFormatter(0.00):u.currencyFormatter(e.totalCobrar)), style: 'ctotal'}
                                         
                                 ]
                             )
@@ -363,7 +376,8 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
                                     margin:[5,5]
 
                                 },{},{
-                                    text:u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=> acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00),0)),
+                                    //u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0: acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)
+                                    text:u.currencyFormatter(x.enviosAsignados.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.tipoPago!= TIPOPAGO.TRANSFERENCIA?e.totalCobrar:0.00)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',

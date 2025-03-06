@@ -109,7 +109,7 @@ export class EmpleadoService {
               cierre:{
                 id:idCierre
               },
-              estado:ESTATUSRECOLECCION.ENTREGADA
+             // estado:ESTATUSRECOLECCION.ENTREGADA
           },
           ...(idEmpleado>0 && {id:idEmpleado})
       }
