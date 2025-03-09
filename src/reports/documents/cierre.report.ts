@@ -5,8 +5,9 @@ import { CierreDetalle, CierreEmpleadoDetalle } from "src/cierre/entities/cierre
 import { ESTATUSRECOLECCION } from "src/constants/status_recoleccion";
 import { TIPOPAGO } from "src/constants/tipo_pago";
 import * as u from 'src/utils/utilidades'
-import { text } from "stream/consumers";
-import { Column } from "typeorm";
+
+const pageSize="LETTER";
+const pageOrientation="portrait"
 
 const styles: StyleDictionary = {
     right:{
@@ -40,6 +41,12 @@ const styles: StyleDictionary = {
         bold: true,
         alignment: 'right'
     },
+    footer: {
+        fontSize: 10,
+        bold: true,
+        alignment: 'right',
+        margin:[0,0,10,0]
+    },
     h4r1: {
         fontSize: 10,
 
@@ -47,19 +54,16 @@ const styles: StyleDictionary = {
     },
     c: {
         fontSize: 10,
-alignment: 'left'
+        alignment: 'left'
     },
     ctotal: {
         fontSize: 10,
-          alignment: 'right',
-          margin: [5, 0]
-
+        alignment: 'right',
+        margin: [5, 0]
     },
     link: {
-
         bold: true,
         italics: true
-
     }
 }
 const logo: Content = {
@@ -67,22 +71,46 @@ const logo: Content = {
     width: 140,
     height: 100
 }
+
 export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
     const date = new Date();
-   
+    
 
     return {
+        pageSize: pageSize,
+        pageOrientation: pageOrientation,
     
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        pageMargins: [ 10, 5, 10, 50 ],
+        info: {
+            title: 'Cierre diario ServiciosEG',
+            author: 'softnet',
+  
+          },
         header: {
             text: [{text:`Reporte Cierre diario\n Fecha Reporte ${u.dateFormatter2(date)}`}],
             alignment: 'right',
             margin: [10 ,10]
         },
-        footer:{
-            text:"By Softnet",
-            alignment:'right',
-            margin:[10,10]
+        footer: function (currentPage, pageCount) {
+            return {
+                table: {
+                    widths: ['*'],
+                    margin: [10, 10, 10, 10],
+                    body: [
+                        [
+                            // [left, top, right, bottom]
+                            { text: "Pagina " + currentPage.toString() + ' de ' + pageCount, style: 'footer' }
+                        ],
+                        [
+                            { text: "by Softnet ",style: 'footer' }
+                        ],
+                    ]
+                },
+                layout: 'noBorders'
+            };
         },
+       
         content: [logo,
 
             {
@@ -115,15 +143,11 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
 
 
             },
-            {
-                text: "\n"
-
-
-            },
+     
             {
                 canvas:
                     [
-                        { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 }
+                        { type: 'line', x1: 0, y1: 0, x2: 580, y2: 0, lineWidth: 1 }
                     ]
             },
             { text: "\n" },
@@ -202,7 +226,7 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
                                     fontSize:14,
                                     margin:[5,5]
 
-                                }, {},{ text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? 0:( acc+ Number(e.totalCobrar)),0)),
+                                }, {},{ text:u.currencyFormatter(x.envios.reduce((acc,e)=>e.estado==ESTATUSRECOLECCION.NORECIBIDA? acc+ 0:( acc+ Number(e.totalCobrar)),0)),
                                     bold:true,
                                     aligment:'right',
                                     fillColor:'black',
@@ -244,25 +268,50 @@ export const CierreReport = (cierre: CierreDetalle): TDocumentDefinitions => {
             ),
 
         ],
+        pageBreakBefore: function(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+            return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0;
+         },
         styles: styles
     }
 
 }
 export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumentDefinitions => {
     const date = new Date();
-   const i=0;
+ 
 
     return {
-    
+        pageSize: pageSize,
+        pageOrientation: pageOrientation,
+      
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        pageMargins: [ 10, 5, 10, 50 ],
+        info: {
+            title: 'cierre por Empleado ServiciosEG',
+            author: 'softnet',
+  
+          },
         header: {
             text: [{text:`Reporte Cierre diario por mensajero\nFecha Reporte ${u.dateFormatter2(date)}\n`}],
             alignment: 'right',
-            margin: [10 ,10]
+            //margin: [10 ,10]
         },
-        footer:{
-            text:"By Softnet",
-            alignment:'right',
-            margin:[10,10]
+        footer: function (currentPage, pageCount) {
+            return {
+                table: {
+                    widths: ['*'],
+                    margin: [10, 10, 10, 10],
+                    body: [
+                        [
+                            // [left, top, right, bottom]
+                            { text: "Pagina " + currentPage.toString() + ' de ' + pageCount, style: 'footer' }
+                        ],
+                        [
+                            { text: "by Softnet ",style: 'footer' }
+                        ],
+                    ]
+                },
+                layout: 'noBorders'
+            };
         },
         content: [logo,
 
@@ -296,15 +345,11 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
 
 
             },
-            {
-                text: "\n"
-
-
-            },
+      
             {
                 canvas:
                     [
-                        { type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 }
+                        { type: 'line', x1: 0, y1: 0, x2: 580, y2: 0, lineWidth: 1 }
                     ]
             },
             { text: "\n" },
