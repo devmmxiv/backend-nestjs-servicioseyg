@@ -267,9 +267,11 @@ constructor(
       return await this.repository.createQueryBuilder("recoleccionEntrega")
        .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
        .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
+       .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleado")
       // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
        .where('recoleccionEntrega.idClienteEnvia=cliente.id')
        .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+       .where('recoleccionEntrega.idEmpleadoAsignado=m.id')
        .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO RECIBIDA']})
        .andWhere('recoleccionEntrega.cerrada=false')
        .getMany()
@@ -279,6 +281,7 @@ constructor(
       throw new ConflictException('Error consultando recolecciones ',message)
     }
    }
+
     async findRecoleccionesEstado() {
       try{
         //createQueryBuilder("user").groupBy("user.name").addGroupBy("user.id")
