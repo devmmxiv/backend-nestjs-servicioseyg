@@ -73,6 +73,7 @@ export class EmpleadoService {
       .createQueryBuilder("empleado")
       .select(["empleado.id","empleado.nombre","empleado.apellido"])
       .where("empleado.tipoEmpleado = :usuario", { usuario: TIPOEMPLEADO.TECNICO})
+      .andWhere("empleado.estado=1")
       .getMany()
       return empleados
     }
