@@ -150,10 +150,12 @@ constructor(
     }
   }
    async findRecoleccionesPorEmpleado(id:number) {
+    console.log("recoleccionporempleado",id)
     const estado='ENTREGADA'
     return await this.repository.createQueryBuilder("recoleccionEntrega")
      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
-    // .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
+     .leftJoinAndSelect("cliente.direcciones","direcciones")
+     .leftJoinAndSelect("direcciones.municipio","municipio")
     // .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipioe")
      .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
@@ -165,8 +167,8 @@ constructor(
     // .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
      .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
      .where('recoleccionEntrega.estado != :estado',{estado})
-     .where('recoleccionEntrega.cerrada=false')
-     .where('recoleccionEntrega.idEmpleadoAsignado=:id',{id})
+     .andWhere('recoleccionEntrega.cerrada=false')
+     .andWhere('recoleccionEntrega.idEmpleadoAsignado=:id',{id})
 
      .getMany()
  
