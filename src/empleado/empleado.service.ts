@@ -25,7 +25,9 @@ export class EmpleadoService {
   }
 
  async  findAll() {
-    return await this.repositoryEmpleado.find();
+    return await this.repositoryEmpleado.find({
+      select:['id','nombre','apellido'],
+      where :{estado:true}});
   }
 
   findOne(id: number) {
@@ -87,6 +89,18 @@ export class EmpleadoService {
       .andWhere("cierre.id = :cierreid",{cierreid:cierreid})
      .andWhere("empleado.id=:idEmpleado", {idEmpleado:id})
      .select(['empleado','envios'])
+      .getMany()
+      return cierre
+    }
+    async empleadoPorCierre(cierreid:number){
+      const cierre=await this.repositoryEmpleado.createQueryBuilder("empleado")
+      .leftJoinAndSelect("empleado.enviosAsignados","envios")
+      .leftJoinAndSelect("envios.cierre","cierre")
+     // .leftJoinAndSelect("envios.cierre","cierre")
+      .where("empleado.id=envios.idEmpleadoAsignado")
+      //.andWhere("envios.idCierre=cierre.id")
+      .andWhere("cierre.id = :cierreid",{cierreid:cierreid})
+      .select(['empleado.id','empleado.nombre','empleado.apellido'])
       .getMany()
       return cierre
     }

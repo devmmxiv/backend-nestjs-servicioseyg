@@ -78,7 +78,7 @@ export class RecoleccionEntregaController {
 
   @Put('/update/:id')
   updateRecoleccion(@Param('id') id: number, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {
- 
+
     return this.recoleccionEntregaService.updateRecoleccion(id, updateRecoleccionEntregaDto);
   }
 
@@ -96,7 +96,7 @@ export class RecoleccionEntregaController {
   }
   @Get('/clientesbycierre/:id')
   getClientesByIdCierre(@Param('id') id: number){
-    console.log(id)
+
     return this.recoleccionEntregaService.findClientesRecolecciones(id)
   }
 }

@@ -25,7 +25,7 @@ export class ClienteController {
   }
   @Get('/clienterecolecciones/:id/:fecha')
   findClienteRecolecciones(@Param('id') id: number,@Param('fecha') fechaInicio: string) {
-    console.log(`fecha inicio ${fechaInicio}`)
+   // console.log(`fecha inicio ${fechaInicio}`)
     return this.clienteService.findClienteRecolecciones(id,fechaInicio);
   }
   @Get('/getallactive')
@@ -42,7 +42,7 @@ export class ClienteController {
 
   @Put()
   update(@Body() updateClienteDto: UpdateClienteDto) {
-    console.log('controller id',updateClienteDto.id)
+   // console.log('controller id',updateClienteDto.id)
     return this.clienteService.updateCliente(updateClienteDto);
   }
 

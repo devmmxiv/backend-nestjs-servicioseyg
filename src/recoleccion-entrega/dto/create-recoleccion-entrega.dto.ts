@@ -17,7 +17,7 @@ export class CreateRecoleccionEntregaDto {
     zonaEntrega:number;
     estado: ESTATUSRECOLECCION;
     clienteEnvia: Cliente;
-    direccionClienteEnvia:Direccion;
+    //direccionClienteEnvia:Direccion;
     municipioRecibe:Municipio;
     tipoPago:TIPOPAGO;
     idEmpleadoAsignado:number;

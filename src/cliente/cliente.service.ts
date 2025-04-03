@@ -5,15 +5,6 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository, UpdateResult } from 'typeorm';
 import { Cliente } from './entities/cliente.entity';
-import { BaseService } from 'src/constants/BaseService';
-import { Direccion } from 'src/direccion/entities/direccion.entity';
-import { RecoleccionEntrega } from 'src/recoleccion-entrega/entities/recoleccion-entrega.entity';
-import { Cierre } from 'src/cierre/entities/cierre.entity';
-import { IsLatitude } from 'class-validator';
-import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.entity';
-import { Usuario } from 'src/usuario/entities/usuario.entity';
-import { dateFormatter } from 'src/utils/utilidades';
-import { TIPODIRECCION } from 'src/constants/direccion-enum';
 
 @Injectable()
 export class ClienteService {
@@ -72,14 +63,7 @@ export class ClienteService {
     .where("cliente.deleted=:deleted", { deleted: false})
     .select(["cliente","direcciones","cuentas","usuario.username","banco","municipio"]).getMany();
 
-    return await this.clienteRepository.find(
-      {where:{deleted:false}})
 
-    return this.clienteRepository
-      .createQueryBuilder('cliente')
-      .orderBy('cliente.id', 'DESC')
-      .select(['id AS cliente_id'])
-      .getRawMany() // or .getMany()
 
   }
   async findSend() {
@@ -104,9 +88,9 @@ export class ClienteService {
     try{
       const temp=new Date(fecha);
       const fechaInicio=new Date(temp.getUTCFullYear(),temp.getUTCMonth(),1);
-      console.log(fechaInicio)
+      //console.log(fechaInicio)
       const fechaFin=new Date(temp.getUTCFullYear(),temp.getUTCMonth()+1,0,17);
-      console.log(fechaFin);
+     // console.log(fechaFin);
     const clientes=await this.clienteRepository.find(
       {
         select:{
@@ -143,7 +127,7 @@ export class ClienteService {
   }
 
   async updateCodigoCliente(id: number, updateClienteDto: UpdateClienteDto) {//esto es para actualizar el codigo del cliente
-    console.log('cliente a actualizar',updateClienteDto.codigoCliente)
+    //console.log('cliente a actualizar',updateClienteDto.codigoCliente)
     return await this.clienteRepository.update(id, updateClienteDto);
   }
 

@@ -63,7 +63,7 @@ constructor(
        const rows:UpdateResult=await this.repository.update(id,recoleccion);
        return rows.affected==1;
      }catch({ name, message } ){
-      console.log(message)
+    
        throw new ConflictException('Error actualizando recoleccion ',message)
      }
    }
@@ -150,7 +150,7 @@ constructor(
     }
   }
    async findRecoleccionesPorEmpleado(id:number) {
-    console.log("recoleccionporempleado",id)
+    //console.log("recoleccionporempleado",id)
     const estado='ENTREGADA'
     return await this.repository.createQueryBuilder("recoleccionEntrega")
      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
@@ -165,8 +165,8 @@ constructor(
      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
     // .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
     // .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
-     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
-     .where('recoleccionEntrega.estado != :estado',{estado})
+    // .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+    // .where('recoleccionEntrega.estado != :estado',{estado})
      .andWhere('recoleccionEntrega.cerrada=false')
      .andWhere('recoleccionEntrega.idEmpleadoAsignado=:id',{id})
 
@@ -179,13 +179,15 @@ constructor(
 
     return await this.repository.createQueryBuilder("recoleccionEntrega")
      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+     .leftJoinAndSelect("cliente.direcciones","direcciones")
+     .leftJoinAndSelect("direcciones.municipio","municipioCliente")
      .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipio")
      .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
-     .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
+     .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleado1")
     // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
      .where('recoleccionEntrega.idClienteEnvia=cliente.id')
-     .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
-     .where('recoleccionEntrega.estado != :estado',{estado})
+    // .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
+    // .where('recoleccionEntrega.estado != :estado',{estado})
      .andWhere('recoleccionEntrega.cerrada=false')
      .andWhere('recoleccionEntrega.idClienteEnvia=:id',{id})
 
@@ -224,16 +226,18 @@ constructor(
     try{
       return await this.repository.createQueryBuilder("recoleccionEntrega")
       .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
-      .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
-      .leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
+      .leftJoinAndSelect("cliente.direcciones","direcciones")
+     .leftJoinAndSelect("direcciones.municipio","municipio")
+     // .leftJoinAndSelect("recoleccionEntrega.direccionEnvia","direccion")
+      //.leftJoinAndSelect("recoleccionEntrega.municipioEnvia","municipio")
       .leftJoinAndSelect("recoleccionEntrega.municipioRecibe","municipioe")
       .leftJoinAndSelect("recoleccionEntrega.empleadoRecolecta","empleado")
     //  .leftJoinAndSelect("recoleccionEntrega.empleadoEntrega","empleado1")
       .leftJoinAndSelect("recoleccionEntrega.empleadoAsignado","empleadoA")
      // .select(['cliente.id','cliente.codigoCliente','cliente.apellido','cliente.nombre','direccion.direccionCompleta','direccion'])
       .where('recoleccionEntrega.idClienteEnvia=cliente.id')
-      .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
-      .where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
+     // .where('recoleccionEntrega.idDireccionEnvia=direccion.id')
+      //.where('recoleccionEntrega.idMunicipioEnvia=municipioe.id')
       .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
       .where('recoleccionEntrega.estado != :estado',{estado})
       .where('recoleccionEntrega.cerrada=false')
