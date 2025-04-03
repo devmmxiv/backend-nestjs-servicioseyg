@@ -16,7 +16,7 @@ constructor(
 
   async create(createRecoleccionDto: CreateRecoleccionDto) {
     try{
-    console.log(createRecoleccionDto);
+    //console.log(createRecoleccionDto);
       return await this.repository.save(createRecoleccionDto)
     }catch({ name, message } ){
     

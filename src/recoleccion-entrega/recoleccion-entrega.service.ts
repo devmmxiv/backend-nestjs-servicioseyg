@@ -24,7 +24,7 @@ constructor(
     
       return await this.repository.save(createRecoleccionEntregaDto)
     }catch({ name, message } ){
-      console.log(message)
+      console.log(name ,message)
       throw new ConflictException('Error creando recoleccion ',message)
     }
    
