@@ -22,7 +22,7 @@ constructor(
   async create(createRecoleccionEntregaDto: CreateRecoleccionEntregaDto) {
     try{
     
-      return await this.repository.save(createRecoleccionEntregaDto)
+      return await this.repository.insert(createRecoleccionEntregaDto)
     }catch({ name, message } ){
       console.log(name ,message)
       throw new ConflictException('Error creando recoleccion ',message)
@@ -32,7 +32,7 @@ constructor(
   async insertRecoleccion(insertRecoleccionDto: InsertRecoleccionDTO) {
     try{
   
-      return await this.repository.save(insertRecoleccionDto)
+      return await this.repository.insert(insertRecoleccionDto)
     }catch({ name, message } ){
     
       throw new ConflictException('Error creando recoleccion ',message)
