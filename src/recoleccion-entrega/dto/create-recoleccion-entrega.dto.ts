@@ -41,8 +41,5 @@ export class InsertRecoleccionDTO {
     municipioRecibe:Municipio;
     tipoPago:TIPOPAGO;
     idEmpleadoAsignado:Empleado;
-
-    
-
 }
 

@@ -60,10 +60,11 @@ constructor(
   async updateRecoleccion(id: number, recoleccion: UpdateRecoleccionEntregaDto) {
 
     try{
+     
        const rows:UpdateResult=await this.repository.update(id,recoleccion);
        return rows.affected==1;
      }catch({ name, message } ){
-    
+
        throw new ConflictException('Error actualizando recoleccion ',message)
      }
    }
@@ -76,7 +77,7 @@ constructor(
       .createQueryBuilder()
       .update()
       .set({ cierre: {id:id}, cerrada:true })
-      .where("estado in(:estados)",{estados:['ENTREGADA','NO RECIBIDA']})
+      .where("estado in(:estados)",{estados:['ENTREGADA','NO RECIBIDA','NO_RECIBIDA']})
       .execute()
        
      }catch({ name, message } ){
@@ -256,7 +257,7 @@ constructor(
       .select(["recoleccionEntrega.estado estado"])
       .addSelect("COUNT(recoleccionEntrega.estado)", "cantidad")
 
-     .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO RECIBIDA']})
+     .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO_RECIBIDA','NO RECIBIDA']})
      .andWhere('recoleccionEntrega.cerrada=false')
       .groupBy("recoleccionEntrega.estado")
       //.addGroupBy('DATE(recoleccionEntrega.fechaCreacion)')
@@ -278,7 +279,7 @@ constructor(
        .where('recoleccionEntrega.idClienteEnvia=cliente.id')
        .where('recoleccionEntrega.idMunicipioRecibe=municipio.id')
        .where('recoleccionEntrega.idEmpleadoAsignado=m.id')
-       .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO RECIBIDA']})
+       .where('recoleccionEntrega.estado in(:estados)',{estados:['ENTREGADA','NO_RECIBIDA','NO RECIBIDA']})
        .andWhere('recoleccionEntrega.cerrada=false')
        .getMany()
    
