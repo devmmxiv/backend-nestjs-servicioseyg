@@ -12,6 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
   app.enableCors(CORS)
   await app.listen(PORT);
+  console.log(`Time start: ${new Date()}`);
   console.log(`Application running on: ${await app.getUrl()}`);
     
 }
