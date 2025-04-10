@@ -5,6 +5,8 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository, UpdateResult } from 'typeorm';
 import { Cliente } from './entities/cliente.entity';
+import { ESTATUSRECOLECCION } from 'src/constants/status_recoleccion';
+import { TIPODIRECCION } from 'src/constants/direccion-enum';
 
 @Injectable()
 export class ClienteService {
@@ -125,7 +127,45 @@ export class ClienteService {
     }
 
   }
+  async findClientegroupRecolecciones(id: number) {
+    try{
 
+   
+     // console.log(fechaFin);
+    const clientes=await this.clienteRepository.find(
+      {
+        select:{
+          envios:{
+          
+          }
+        }
+      ,
+      relations:{
+     
+      },
+ 
+      where: {
+        id,
+          envios: {
+            estado:ESTATUSRECOLECCION.CREADA,
+             cerrada:false
+          
+          },
+     
+      },
+      order:{
+        envios:{
+          fechaEntrega : "ASC"
+        }
+      }
+      }
+    );
+    return clientes;
+  }catch{
+      throw new ConflictException('El cliente no existe')
+    }
+
+  }
   async updateCodigoCliente(id: number, updateClienteDto: UpdateClienteDto) {//esto es para actualizar el codigo del cliente
     //console.log('cliente a actualizar',updateClienteDto.codigoCliente)
     return await this.clienteRepository.update(id, updateClienteDto);
@@ -188,5 +228,38 @@ export class ClienteService {
     return cliente;
   }
  
-  
+  async ClienteRecoleccionesNoCerradas(id:number){
+
+    const cliente = await this.clienteRepository  
+    .createQueryBuilder("cliente")
+    .leftJoinAndSelect("cliente.direcciones","direccion").andWhere('direcciones.tipoDireccion=:tipo',{tipo:"principal"})
+    .leftJoinAndSelect("cliente.envios","recolecciones")
+    .leftJoinAndSelect("cliente.envios.muncipi","recolecciones")
+    .leftJoinAndSelect("recolecciones.empleadoAsignado","empleado")
+    .leftJoinAndSelect("direccion.municipio","municipio")
+    .where("cliente.id = :id", { id: id})
+    .andWhere("recolecciones.cerrada=:cerrada",{cerrada:false})
+    //
+    //.andWhere("direccion.tipoDireccion:tipo",{tipo:TIPODIRECCION.PRINCIPAL})
+    .getOne()
+   
+    return cliente;
+  }
+  async ClientesRecoleccionesNoCerradasPorEmpleado(idEmpleado:number){
+
+    const cliente = await this.clienteRepository  
+    .createQueryBuilder("cliente")
+    .leftJoinAndSelect("cliente.direcciones","direccion")
+    .leftJoinAndSelect("cliente.envios","recolecciones")
+    .leftJoinAndSelect("recolecciones.municipioRecibe","municipioRecibe")
+    .leftJoinAndSelect("recolecciones.empleadoAsignado","empleado")
+    .leftJoinAndSelect("direccion.municipio","municipio")
+    .where("empleado.id = :id", { id: idEmpleado})
+    .andWhere("recolecciones.cerrada=:cerrada",{cerrada:false})
+    //
+    //.andWhere("direccion.tipoDireccion:tipo",{tipo:TIPODIRECCION.PRINCIPAL})
+    .getMany()
+   
+    return cliente;
+  }
 }

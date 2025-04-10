@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { UsuarioService } from './usuario.service';
 
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { CreateUsuarioDto, updatePasswordUsuarioDto } from './dto/create-usuario.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('usuario')
@@ -14,7 +14,10 @@ export class UsuarioController {
   create(@Body() createPerfilDto: CreateUsuarioDto) {
     return this.usuarioService.create(createPerfilDto);
   }
-
+  @Patch('updatepassword')
+  updatePassword(@Body() createPerfilDto: updatePasswordUsuarioDto) {
+    return this.usuarioService.updatePassword(createPerfilDto);
+  }
   @Get()
   @UseGuards(AuthGuard('jwt'))
   findAll() {

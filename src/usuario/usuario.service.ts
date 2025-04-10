@@ -3,7 +3,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { CreateUsuarioDto, updatePasswordUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import * as bcrypt from 'bcrypt';
 @Injectable()
@@ -32,6 +32,33 @@ export class UsuarioService {
     c.password=undefined;
 
     return c;
+  }
+  async updatePassword(createUsuarioDto: updatePasswordUsuarioDto) {
+    const userExst = await this.repositoryUsuario.findOne({ where: {username:createUsuarioDto.username}});
+    if(!userExst){
+      throw new ConflictException(`Usuario ${createUsuarioDto.username} No existe`);
+    }
+    console.log("la nueva contraseña es ",createUsuarioDto.password);
+    const hash=await  bcrypt.hash( createUsuarioDto.password, 10);
+    createUsuarioDto.password=hash;
+    console.log("usuario actualizado",createUsuarioDto);
+    try{
+   
+  
+      const resp= await  this.repositoryUsuario
+       .createQueryBuilder()
+       .update()
+       .set({ password:createUsuarioDto.password })
+       .where("username = :user",{user:createUsuarioDto.username})
+       .execute()
+       return resp;
+      }catch({ name, message } ){
+     
+        throw new ConflictException('Error asignado idCierre ',message)
+      }
+
+
+ 
   }
 
  async  findAll() {

@@ -74,7 +74,12 @@ export class RecoleccionEntregaController {
     return this.recoleccionEntregaService.ListadoRecolecionesCierre();
 
   }
+  @Get('/listadoagrupacionclientes/:id')
+  listadoagrupacionclientes(@Param('id') id: number) {
 
+    return this.recoleccionEntregaService.listaAgrupacionCliente(id);
+
+  }
 
   @Put('/update/:id')
   updateRecoleccion(@Param('id') id: number, @Body() updateRecoleccionEntregaDto: UpdateRecoleccionEntregaDto) {

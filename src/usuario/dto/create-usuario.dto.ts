@@ -13,3 +13,9 @@ export class CreateUsuarioDto {
     estado?:Boolean;
 
 }
+export class updatePasswordUsuarioDto {
+    @IsString()
+    username:string;
+    @IsString()
+    password:string;
+}

@@ -288,7 +288,29 @@ constructor(
       throw new ConflictException('Error consultando recolecciones ',message)
     }
    }
+   async listaAgrupacionCliente(idEmpleado:number) {
+    try{
+      //createQueryBuilder("user").groupBy("user.name").addGroupBy("user.id")
+      return await this.repository.createQueryBuilder("recoleccionEntrega")
+      .leftJoinAndSelect("recoleccionEntrega.clienteEnvia", "cliente")
+      .leftJoinAndSelect("cliente.direcciones","direccion").andWhere('direcciones.tipoDireccion=:tipo',{tipo:"principal"})
+      .leftJoinAndSelect("direccion.municipio","municipio")
 
+      .where('recoleccionEntrega.cerrada=false')
+      .where('recoleccionEntrega.estado=:estado',{estado:"creada"})
+      .andWhere('recoleccionEntrega.idEmpleadoAsignado=:id',{id:idEmpleado})
+      .select(['COUNT(recoleccionEntrega.id) AS cantidad','cliente.id as id','cliente.nombre as nombre','cliente.apellido as apellido','cliente.telefono as telefono',
+        'direccion.direccioncompleta as direccion','direccion.zona as zona','municipio.nombre as municipio',
+    ])
+      //.addSelect("SUM(user.photosCount)", "sum")
+      .groupBy("recoleccionEntrega.clienteEnvia")
+      .getRawMany();
+
+                                         
+    }catch({ name, message } ){
+      throw new ConflictException('Error consultando recoleccion ',message)
+    }
+   }
     async findRecoleccionesEstado() {
       try{
         //createQueryBuilder("user").groupBy("user.name").addGroupBy("user.id")
