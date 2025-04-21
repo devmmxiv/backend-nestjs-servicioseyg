@@ -456,28 +456,3 @@ export const CierreporEmpleadoReport = (cierre: CierreEmpleadoDetalle): TDocumen
     }
 
 }
-/*
- ...cierre.clientesRecoleciones.map((x)=> (
-                
-            
-                   {
-                    header:{text:"Encabezado de tabla"},
-                    table: {
-                        body: [['ENCABEZADO ID1']]
-                    }
-
-                }            
-            )
-                
-             
-            )
- /* [/**{text:`Codigo Cliente: ${x.codigoCliente}`,style:'h3'},
-             {text:`Nombre Cliente: ${x.nombre}`},
-             {text:`Apellido Cliente: ${x.apellido}`},
-             {text:`Telefono Cliente: ${x.telefono}`},
-             {text:`Nombre Pagina: ${x.nombrePagina}`,style:'link'},
-             {text:"\n"},
-
-             x.envios.map((c=>[c.costoEnvio])) 
-
-           ],*/
