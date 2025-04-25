@@ -245,6 +245,23 @@ export class ClienteService {
    
     return cliente;
   }
+   
+  async ClienteRecoleccionesNoCerradasAdministrador(){
+
+    const cliente = await this.clienteRepository  
+    .createQueryBuilder("cliente")
+    .leftJoinAndSelect("cliente.direcciones","direccion").andWhere('direcciones.tipoDireccion=:tipo',{tipo:"principal"})
+    .leftJoinAndSelect("cliente.envios","recolecciones")
+    .leftJoinAndSelect("recolecciones.municipioRecibe","municipioRecibe")
+    .leftJoinAndSelect("recolecciones.empleadoAsignado","empleado")
+    .leftJoinAndSelect("direccion.municipio","municipio")
+   .where("recolecciones.cerrada=:cerrada",{cerrada:false})
+    //
+    //.andWhere("direccion.tipoDireccion:tipo",{tipo:TIPODIRECCION.PRINCIPAL})
+    .getMany()
+   
+    return cliente;
+  }
   async ClientesRecoleccionesNoCerradasPorEmpleado(idEmpleado:number){
 try{
     const cliente = await this.clienteRepository  

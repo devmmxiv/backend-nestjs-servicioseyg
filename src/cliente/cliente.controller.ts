@@ -33,6 +33,11 @@ export class ClienteController {
    // console.log(`fecha inicio ${fechaInicio}`)
     return this.clienteService.ClienteRecoleccionesNoCerradas(id);
   }
+  @Get('/clienterecoleccionesnocerradasadministrador')
+  findClienteRecoleccionesNoCerradasAdministrador() {
+
+    return this.clienteService.ClienteRecoleccionesNoCerradasAdministrador();
+  }
   @Get('/clientesrecoleccionesnocerradasporempleado/:idempleado')
   findClientesRecoleccionesNoCerradas(@Param('idempleado') idempleado: number) {
    // console.log(`fecha inicio ${fechaInicio}`)
