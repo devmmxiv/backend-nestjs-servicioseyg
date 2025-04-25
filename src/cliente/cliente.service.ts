@@ -247,7 +247,7 @@ export class ClienteService {
   }
    
   async ClienteRecoleccionesNoCerradasAdministrador(){
-
+try{
     const cliente = await this.clienteRepository  
     .createQueryBuilder("cliente")
     .leftJoinAndSelect("cliente.direcciones","direccion").andWhere('direcciones.tipoDireccion=:tipo',{tipo:"principal"})
@@ -256,11 +256,12 @@ export class ClienteService {
     .leftJoinAndSelect("recolecciones.empleadoAsignado","empleado")
     .leftJoinAndSelect("direccion.municipio","municipio")
    .where("recolecciones.cerrada=:cerrada",{cerrada:false})
-    //
-    //.andWhere("direccion.tipoDireccion:tipo",{tipo:TIPODIRECCION.PRINCIPAL})
     .getMany()
    
     return cliente;
+}catch(e){
+  throw new ConflictException('Error consultar recolecciones no cerradas'+ e)
+}
   }
   async ClientesRecoleccionesNoCerradasPorEmpleado(idEmpleado:number){
 try{
@@ -279,7 +280,7 @@ try{
    
     return cliente;
 }catch(e){
-  throw new ConflictException('Error consultar recolecciones cerradas por empleado'+ e)
+  throw new ConflictException('Error consultar recolecciones no cerradas  por empleado'+ e)
 }
   }
 }
